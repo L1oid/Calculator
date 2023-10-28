@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'state/store.dart';
 import 'view/component.dart';
 
-void main() => runApp(const CalculatorApp());
+void main() => runApp(MyApp());
 
-class CalculatorApp extends StatelessWidget {
-  const CalculatorApp({super.key});
+class MyApp extends StatelessWidget {
+  final store = createStore();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Calculator',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return StoreProvider(
+      store: store,
+      child: MaterialApp(
+        title: 'Calculator',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const CalculatorScreen(),
       ),
-      home: const CalculatorScreen(),
     );
   }
 }

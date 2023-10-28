@@ -1,5 +1,7 @@
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
-import '/domain/calculator_factory.dart';
+import '/state/app_state.dart';
+import "/state/reducers.dart";
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -9,107 +11,77 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class CalculatorScreenState extends State<CalculatorScreen> {
-  String expression = '';
-
-  void addSymbol(String buttonText) {
-    setState(() {
-      expression += buttonText;
-    });
-  }
-
-  void calculate() {
-    final calculator = CalculatorFactory.createCalculator();
-    try {
-      final result = calculator.calculate(expression);
-      setState(() {
-        expression = result.toString();
-      });
-    } catch (e) {
-      setState(() {
-        expression = e.toString();
-      });
-    }
-  }
-
-  void clearSymbol() {
-    setState(() {
-      if (expression != null && expression.isNotEmpty) {
-        expression = expression.substring(0, expression.length - 1);
-      }
-    });
-  }
-
-  void clearExpression() {
-    setState(() {
-      expression = '';
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calculator'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              alignment: Alignment.bottomRight,
-              child: Text(
-                expression,
-                style: const TextStyle(fontSize: 24.0),
-              ),
-            ),
+    return StoreConnector<AppState, String>(
+      converter: (store) => store.state.expression,
+      builder: (context, expression) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Calculator'),
           ),
-          const Divider(),
-          Column(
+          body: Column(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  buildButton('1'),
-                  buildButton('2'),
-                  buildButton('3'),
-                  buildButton('+'),
-                ],
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    expression,
+                    style: const TextStyle(fontSize: 24.0),
+                  ),
+                ),
               ),
-              Row(
+              const Divider(),
+              Column(
                 children: <Widget>[
-                  buildButton('4'),
-                  buildButton('5'),
-                  buildButton('6'),
-                  buildButton('-'),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  buildButton('7'),
-                  buildButton('8'),
-                  buildButton('9'),
-                  buildButton('*'),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  buildButton('0'),
-                  buildButton('('),
-                  buildButton(')'),
-                  buildButton('/'),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  buildButton('.'),
-                  buildButton('<-'),
-                  buildButton('C'),
-                  buildButton('='),
+                  Row(
+                    children: <Widget>[
+                      buildButton('1'),
+                      buildButton('2'),
+                      buildButton('3'),
+                      buildButton('+'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      buildButton('4'),
+                      buildButton('5'),
+                      buildButton('6'),
+                      buildButton('-'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      buildButton('7'),
+                      buildButton('8'),
+                      buildButton('9'),
+                      buildButton('*'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      buildButton('0'),
+                      buildButton('('),
+                      buildButton(')'),
+                      buildButton('/'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      buildButton('.'),
+                      buildButton('<-'),
+                      buildButton('C'),
+                      buildButton('='),
+                    ],
+                  ),
                 ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -118,13 +90,13 @@ class CalculatorScreenState extends State<CalculatorScreen> {
       child: ElevatedButton(
         onPressed: () {
           if (buttonText == 'C') {
-            clearExpression();
+            StoreProvider.of<AppState>(context).dispatch(ClearExpressionAction());
           } else if (buttonText == '=') {
-            calculate();
-          } else if (buttonText == '<-'){
-            clearSymbol();
+            StoreProvider.of<AppState>(context).dispatch(CalculateAction());
+          } else if (buttonText == '<-') {
+            StoreProvider.of<AppState>(context).dispatch(ClearSymbolAction());
           } else {
-            addSymbol(buttonText);
+            StoreProvider.of<AppState>(context).dispatch(AddSymbolAction(buttonText));
           }
         },
         child: Text(
