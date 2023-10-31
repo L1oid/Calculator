@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '/state/app_state.dart';
 import "/state/reducers.dart";
 
-class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({super.key});
+class BasicCalculatorScreen extends StatefulWidget {
+  const BasicCalculatorScreen({super.key});
 
   @override
-  CalculatorScreenState createState() => CalculatorScreenState();
+  BasicCalculatorScreenState createState() => BasicCalculatorScreenState();
 }
 
-class CalculatorScreenState extends State<CalculatorScreen> {
+class BasicCalculatorScreenState extends State<BasicCalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,6 @@ class CalculatorScreenState extends State<CalculatorScreen> {
       converter: (store) => store.state.expression,
       builder: (context, expression) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Calculator'),
-          ),
           body: Column(
             children: <Widget>[
               Expanded(

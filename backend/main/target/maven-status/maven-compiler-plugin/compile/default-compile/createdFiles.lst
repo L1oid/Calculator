@@ -1,0 +1,11 @@
+pack\application\auth\impl\dto\User.class
+pack\infrastructure\controller\rest\user\UserController.class
+pack\infrastructure\controller\rest\user\UserController$2.class
+pack\infrastructure\interceptor\Interceptor.class
+pack\infrastructure\config\Filter.class
+pack\application\auth\api\Tokenable.class
+pack\infrastructure\controller\rest\user\UserController$1.class
+pack\infrastructure\message\Sender.class
+pack\application\auth\api\Authorizable.class
+pack\infrastructure\config\Config.class
+pack\infrastructure\interceptor\TokenRequired.class
