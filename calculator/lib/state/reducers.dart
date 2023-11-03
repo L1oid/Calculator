@@ -2,7 +2,10 @@ import 'app_state.dart';
 import '/domain/calculator_factory.dart';
 
 AppState appReducer(AppState state, dynamic action) {
-  return AppState(expressionReducer(state.expression, action));
+  return AppState(
+    expressionReducer(state.expression, action),
+    authReducer(state.isAuthenticated, action),
+  );
 }
 
 String expressionReducer(String expression, dynamic action) {
@@ -26,6 +29,16 @@ String expressionReducer(String expression, dynamic action) {
   return expression;
 }
 
+bool authReducer(bool isAuthenticated, dynamic action) {
+  if (action is AuthSuccessAction) {
+    return true;
+  } else if (action is AuthFailureAction) {
+    return false;
+  }
+  return isAuthenticated;
+}
+
+//actions
 class AddSymbolAction {
   final String symbol;
 
@@ -37,3 +50,22 @@ class ClearSymbolAction {}
 class ClearExpressionAction {}
 
 class CalculateAction {}
+
+class AuthRequestAction {
+  final String username;
+  final String password;
+
+  AuthRequestAction(this.username, this.password);
+}
+
+class AuthSuccessAction {
+  final String token;
+
+  AuthSuccessAction(this.token);
+}
+
+class AuthFailureAction {
+  final String error;
+
+  AuthFailureAction(this.error);
+}
