@@ -1,5 +1,8 @@
 package pack.infrastructure.controller.rest.user;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Produces;
@@ -31,6 +34,7 @@ public class UserController {
         Jsonb jsonb = JsonbBuilder.create();
         try {
             user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
+            Logger.getLogger(user.getLogin(), user.getPassword());
             Boolean usrTrue = model.checkUser(user.getLogin(), user.getPassword());
             if (usrTrue == null) {
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();

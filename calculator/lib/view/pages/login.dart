@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 
 import '../../state/app_state.dart';
-import '../../state/reducers.dart';
+import '../../state/actions.dart';
 
 class LoginScreen extends StatelessWidget {
   final Store<AppState> store;
