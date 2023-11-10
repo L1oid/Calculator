@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
-import 'app_state.dart';
+import 'state.dart';
 import 'actions.dart';
 
 Middleware<AppState> createAuthMiddleware() {
@@ -26,13 +26,17 @@ Middleware<AppState> createAuthMiddleware() {
           store.dispatch(AuthSuccessAction(token));
         } else {
           final errorMessage = json.decode(response.body);
-          store.dispatch(AuthFailureAction(errorMessage));
+          if (errorMessage == "userNotFound") {
+            store.dispatch(AuthFailureAction("Такого пользователя не существует"));
+          }
+          else {
+            store.dispatch(AuthFailureAction("Неизвестная ошибка"));
+          }
         }
       } catch (error) {
         store.dispatch(AuthFailureAction('Failed to authenticate'));
       }
     }
-
     next(action);
   };
 }

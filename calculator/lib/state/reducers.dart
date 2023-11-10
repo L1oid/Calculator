@@ -1,4 +1,4 @@
-import 'app_state.dart';
+import 'state.dart';
 import '/domain/calculator_factory.dart';
 import 'actions.dart';
 
@@ -6,7 +6,8 @@ AppState appReducer(AppState state, dynamic action) {
   return AppState(
     expressionReducer(state.expression, action),
     authReducer(state.isAuthenticated, action),
-    authTokenReducer(state.authToken, action), // New field
+    authTokenReducer(state.authToken, action),
+    authErrorReducer(state.authError, action),
   );
 }
 
@@ -45,4 +46,11 @@ String authTokenReducer(String authToken, dynamic action) {
     return action.token;
   }
   return authToken;
+}
+
+String authErrorReducer(String authError, dynamic action) {
+  if (action is AuthFailureAction) {
+    return action.error;
+  }
+  return authError;
 }
