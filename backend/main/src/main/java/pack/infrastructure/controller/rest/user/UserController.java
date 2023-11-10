@@ -13,13 +13,14 @@ import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
 import jakarta.inject.Inject;
 
-import pack.application.auth.impl.dto.User;
-import pack.application.auth.api.Authorizable;
-import pack.application.auth.api.Tokenable;
+import pack.application.auth.service.impl.dto.User;
+import pack.application.auth.service.api.Authorizable;
+import pack.application.auth.service.api.Tokenable;
+import pack.infrastructure.builder.Built;
 
 @Path("/users")
 public class UserController {
-    @Inject
+    @Inject @Built
     Authorizable model;
 
     @Inject
@@ -34,12 +35,11 @@ public class UserController {
         Jsonb jsonb = JsonbBuilder.create();
         try {
             user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
-            Logger.getLogger(user.getLogin(), user.getPassword());
-            Boolean usrTrue = model.checkUser(user.getLogin(), user.getPassword());
+            Boolean usrTrue = model.checkUser(user);
             if (usrTrue == null) {
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             } else if (usrTrue == true) {
-                String token = tokenable.getToken(user.getLogin());
+                String token = tokenable.createToken(user);
                 return Response.ok(jsonb.toJson(token)).build();
             } else return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
         } catch (JsonbException e) {
@@ -58,7 +58,7 @@ public class UserController {
         User newUser;
         try {  
             newUser = jsonb.fromJson(User,new User(){}.getClass().getGenericSuperclass());    
-            Boolean userCreated = model.addUser(newUser.getLogin(), newUser.getPassword(), newUser.getEmail());
+            Boolean userCreated = model.addUser(newUser);
             if (userCreated == null) {
                 return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             } else if (userCreated == false) {

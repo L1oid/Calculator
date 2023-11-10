@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import '/state/app_state.dart';
 import "/state/actions.dart";
 
-class BasicCalculatorScreen extends StatefulWidget {
-  const BasicCalculatorScreen({super.key});
 
-  @override
-  BasicCalculatorScreenState createState() => BasicCalculatorScreenState();
-}
+class BasicCalculatorScreenState extends StatelessWidget {
+  const BasicCalculatorScreenState({super.key});
 
-class BasicCalculatorScreenState extends State<BasicCalculatorScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -35,42 +31,42 @@ class BasicCalculatorScreenState extends State<BasicCalculatorScreen> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      buildButton('1'),
-                      buildButton('2'),
-                      buildButton('3'),
-                      buildButton('+'),
+                      buildButton('1', context),
+                      buildButton('2', context),
+                      buildButton('3', context),
+                      buildButton('+', context),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      buildButton('4'),
-                      buildButton('5'),
-                      buildButton('6'),
-                      buildButton('-'),
+                      buildButton('4', context),
+                      buildButton('5', context),
+                      buildButton('6', context),
+                      buildButton('-', context),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      buildButton('7'),
-                      buildButton('8'),
-                      buildButton('9'),
-                      buildButton('*'),
+                      buildButton('7', context),
+                      buildButton('8', context),
+                      buildButton('9', context),
+                      buildButton('*', context),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      buildButton('0'),
-                      buildButton('('),
-                      buildButton(')'),
-                      buildButton('/'),
+                      buildButton('0', context),
+                      buildButton('(', context),
+                      buildButton(')', context),
+                      buildButton('/', context),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      buildButton('.'),
-                      buildButton('<-'),
-                      buildButton('C'),
-                      buildButton('='),
+                      buildButton('.', context),
+                      buildButton('<-', context),
+                      buildButton('C', context),
+                      buildButton('=', context),
                     ],
                   ),
                 ],
@@ -82,7 +78,7 @@ class BasicCalculatorScreenState extends State<BasicCalculatorScreen> {
     );
   }
 
-  Widget buildButton(String buttonText) {
+  Widget buildButton(String buttonText, BuildContext context) {
     return Expanded(
       child: ElevatedButton(
         onPressed: () {

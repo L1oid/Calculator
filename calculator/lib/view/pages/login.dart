@@ -7,7 +7,10 @@ import '../../state/actions.dart';
 class LoginScreen extends StatelessWidget {
   final Store<AppState> store;
 
-  const LoginScreen({Key? key, required this.store}) : super(key: key);
+  LoginScreen({Key? key, required this.store}) : super(key: key);
+
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +23,25 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: usernameController,
+              decoration: const InputDecoration(
                 labelText: 'Логин',
               ),
             ),
             const SizedBox(height: 16),
-            const TextField(
+            TextField(
+              controller: passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Пароль',
               ),
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
-                const username = "user";
-                const password = "12345";
+                final username = usernameController.text;
+                final password = passwordController.text;
                 store.dispatch(AuthRequestAction(username, password));
               },
               child: const Text('Войти'),

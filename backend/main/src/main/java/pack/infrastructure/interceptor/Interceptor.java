@@ -11,8 +11,9 @@ import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.ext.Provider;
 import jakarta.ws.rs.core.MediaType;
 
-import pack.application.auth.api.Authorizable;
-import pack.application.auth.api.Tokenable;
+import pack.application.auth.service.api.Authorizable;
+import pack.application.auth.service.api.Tokenable;
+import pack.application.auth.service.impl.dto.User;
 
 @Provider
 @TokenRequired
@@ -27,6 +28,9 @@ public class Interceptor implements ContainerRequestFilter {
         String token = requestContext.getHeaderString("token");
         Jsonb jsonb = JsonbBuilder.create();
 
+        User user = new User();
+        user.setLogin(login);
+
         if (login == null | token == null) requestContext.abortWith(
             Response.status(Response.Status.UNAUTHORIZED)
             .type(MediaType.APPLICATION_JSON)
@@ -34,7 +38,7 @@ public class Interceptor implements ContainerRequestFilter {
             .build()
         );
 
-        if (!useToken.checkToken(login, token)) requestContext.abortWith(
+        if (!useToken.checkToken(user, token)) requestContext.abortWith(
             Response.status(Response.Status.UNAUTHORIZED)
             .type(MediaType.APPLICATION_JSON)
             .entity(jsonb.toJson("Authorization Token Expired"))

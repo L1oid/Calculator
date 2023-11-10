@@ -6,7 +6,7 @@ import 'auth_middleware.dart';
 Store<AppState> createStore() {
   return Store(
     appReducer,
-    initialState: AppState('', false),
+    initialState: AppState('', false, ''), // Include an empty string as the initial token
     middleware: [createAuthMiddleware()],
   );
 }

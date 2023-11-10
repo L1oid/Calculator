@@ -6,6 +6,7 @@ AppState appReducer(AppState state, dynamic action) {
   return AppState(
     expressionReducer(state.expression, action),
     authReducer(state.isAuthenticated, action),
+    authTokenReducer(state.authToken, action), // New field
   );
 }
 
@@ -37,4 +38,11 @@ bool authReducer(bool isAuthenticated, dynamic action) {
     return false;
   }
   return isAuthenticated;
+}
+
+String authTokenReducer(String authToken, dynamic action) {
+  if (action is AuthSuccessAction) {
+    return action.token;
+  }
+  return authToken;
 }

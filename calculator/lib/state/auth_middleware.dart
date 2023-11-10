@@ -10,32 +10,22 @@ Middleware<AppState> createAuthMiddleware() {
       try {
         Map<String, String> requestBody = {
           'login': action.username,
-          'password': action.password,
-          'email': "",
+          'password': action.password
         };
 
         final response = await http.post(
           Uri.parse('http://localhost:8080/server/api/users/auth'),
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json;charset=utf-8',
           },
           body: jsonEncode(requestBody),
         );
 
-        print(action.username);
-        print(action.password);
-        print(response.body);
-        print(response.statusCode);
-
         if (response.statusCode == 200) {
-          print("middleware: успешно");
-          final jsonData = json.decode(response.body);
-          final token = jsonData['token'];
+          final token = json.decode(response.body);
           store.dispatch(AuthSuccessAction(token));
         } else {
-          print("middleware: ошибка");
-          final jsonData = json.decode(response.body);
-          final errorMessage = jsonData['message'];
+          final errorMessage = json.decode(response.body);
           store.dispatch(AuthFailureAction(errorMessage));
         }
       } catch (error) {
