@@ -24,7 +24,27 @@ class AuthSuccessAction {
 }
 
 class AuthFailureAction {
-  final String error;
+  final String authError;
 
-  AuthFailureAction(this.error);
+  AuthFailureAction(this.authError);
+}
+
+class RegRequestAction {
+  final String username;
+  final String password;
+  final String email;
+
+  RegRequestAction(this.username, this.password, this.email);
+}
+
+class RegFailureAction {
+  final String regError;
+
+  RegFailureAction(this.regError);
+}
+
+class RegSuccessAction {
+  final String regSuccess;
+
+  RegSuccessAction(this.regSuccess);
 }

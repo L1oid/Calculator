@@ -1,4 +1,5 @@
 import 'api/calculator_interface.dart';
+
 class BasicCalculator implements Calculator {
   @override
   double calculate(String input) {
@@ -10,14 +11,33 @@ class BasicCalculator implements Calculator {
   List<String> tokenize(String input) {
     final cleanedInput = input.replaceAll(' ', '');
     final tokenRegExp = RegExp(r'(\d+\.\d+|\d+|[+\-*/()])');
-    return tokenRegExp.allMatches(cleanedInput).map((match) => match.group(0)!).toList();
+    final matches = tokenRegExp.allMatches(cleanedInput).map((match) => match.group(0)!).toList();
+
+    for (int i = 0; i < matches.length; i++) {
+      if (matches[i] == '-' && (i == 0 || matches[i - 1] == '(' || matches[i - 1] == '*' || matches[i - 1] == '/')) {
+        if (i + 1 < matches.length) {
+          if (matches[i + 1] == '(') {
+            matches[i] = '-1';
+            matches.insert(i + 1, '*');
+          } else if (double.tryParse(matches[i + 1]) != null) {
+            matches[i] = '-${matches[i + 1]}';
+            matches.removeAt(i + 1);
+          }
+        }
+      }
+    }
+    return matches;
   }
+
+
 
   double evaluate(List<String> tokens) {
     final stack = <double>[];
     final operators = <String>[];
 
-    for (final token in tokens) {
+    for (int i = 0; i < tokens.length; i++) {
+      final token = tokens[i];
+
       if (double.tryParse(token) != null) {
         stack.add(double.parse(token));
       } else if (token == '(') {
@@ -28,10 +48,15 @@ class BasicCalculator implements Calculator {
         }
         operators.removeLast();
       } else {
-        while (operators.isNotEmpty && hasHigherPrecedence(operators.last, token)) {
-          applyOperator(stack, operators.removeLast());
+        if (token == '-' && (i == 0 || tokens[i - 1] == '(' || tokens[i - 1] == '*' || tokens[i - 1] == '/')) {
+          stack.add(-1);
+          operators.add('*');
+        } else {
+          while (operators.isNotEmpty && hasHigherPrecedence(operators.last, token)) {
+            applyOperator(stack, operators.removeLast());
+          }
+          operators.add(token);
         }
-        operators.add(token);
       }
     }
 

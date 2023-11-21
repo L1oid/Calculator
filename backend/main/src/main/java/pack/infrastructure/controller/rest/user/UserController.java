@@ -16,58 +16,82 @@ import jakarta.inject.Inject;
 import pack.application.auth.service.impl.dto.User;
 import pack.application.auth.service.api.Authorizable;
 import pack.application.auth.service.api.Tokenable;
+import pack.application.auth.service.status.UserAddStatus;
+import pack.application.auth.service.status.UserCheckStatus;
 import pack.infrastructure.builder.Built;
 
 @Path("/users")
 public class UserController {
+
     @Inject @Built
     Authorizable model;
 
     @Inject
     Tokenable tokenable;
 
+    private static final Jsonb jsonb = JsonbBuilder.create();
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
+
     @POST
-    @Path("/auth")
+    @Path("/authenticate")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response authUser(String userJson) {
-        User user;
-        Jsonb jsonb = JsonbBuilder.create();
+    public Response authenticateUser(String userJson) {
         try {
-            user = jsonb.fromJson(userJson, new User(){}.getClass().getGenericSuperclass());
-            Boolean usrTrue = model.checkUser(user);
-            if (usrTrue == null) {
-                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
-            } else if (usrTrue == true) {
-                String token = tokenable.createToken(user);
-                return Response.ok(jsonb.toJson(token)).build();
-            } else return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
+            User user = jsonb.fromJson(userJson, User.class);
+            UserCheckStatus status = model.checkUser(user);
+
+            switch (status) {
+                case SUCCESSFUL_AUTHENTICATION:
+                    String token = tokenable.createToken(user);
+                    return Response.ok(jsonb.toJson(token)).build();
+                case INCORRECT_PASSWORD:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("IncorrectPassword")).build();
+                case USER_NOT_FOUND:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
+                default:
+                    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
+            }
         } catch (JsonbException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
+            return handleJsonbException(e);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
-        }    
+            return handleException(e);
+        }
     }
-    
+
     @POST
     @Path("/register")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response createUser(String User) {
-        Jsonb jsonb = JsonbBuilder.create();             
-        User newUser;
-        try {  
-            newUser = jsonb.fromJson(User,new User(){}.getClass().getGenericSuperclass());    
-            Boolean userCreated = model.addUser(newUser);
-            if (userCreated == null) {
-                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
-            } else if (userCreated == false) {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserAlreadyExist")).build();
-            } else return Response.ok(jsonb.toJson("userCreated")).build();
+    public Response registerUser(String userJson) {
+        try {
+            User user = jsonb.fromJson(userJson, User.class);
+            UserAddStatus status = model.addUser(user);
+
+            switch (status) {
+                case SUCCESSFUL_REGISTRATION:
+                    return Response.ok(jsonb.toJson("UserCreated")).build();
+                case USER_ALREADY_EXISTS:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserAlreadyExist")).build();
+                case EMAIL_ALREADY_EXISTS:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("EmailAlreadyExist")).build();
+                default:
+                    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
+            }
         } catch (JsonbException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
+            return handleJsonbException(e);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();	             
-        }    
+            return handleException(e);
+        }
+    }
+
+    private Response handleJsonbException(JsonbException e) {
+        logger.severe("JsonbException: " + e.getMessage());
+        return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();
+    }
+
+    private Response handleException(Exception e) {
+        logger.severe("Error: " + e.getMessage());
+        return Response.status(Response.Status.BAD_REQUEST).entity(jsonb.toJson(e.getMessage())).build();
     }
 }

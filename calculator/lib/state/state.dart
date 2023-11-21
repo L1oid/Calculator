@@ -1,8 +1,9 @@
 class AppState {
   final String expression;
-  final bool isAuthenticated;
   final String authToken;
   final String authError;
+  final String regError;
+  final String regSuccess;
 
-  AppState(this.expression, this.isAuthenticated, this.authToken, this.authError);
+  AppState(this.expression, this.authToken, this.authError, this.regError, this.regSuccess);
 }

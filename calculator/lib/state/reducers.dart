@@ -5,9 +5,10 @@ import 'actions.dart';
 AppState appReducer(AppState state, dynamic action) {
   return AppState(
     expressionReducer(state.expression, action),
-    authReducer(state.isAuthenticated, action),
     authTokenReducer(state.authToken, action),
     authErrorReducer(state.authError, action),
+    regErrorReducer(state.regError, action),
+    regSuccessReducer(state.regSuccess, action)
   );
 }
 
@@ -32,15 +33,6 @@ String expressionReducer(String expression, dynamic action) {
   return expression;
 }
 
-bool authReducer(bool isAuthenticated, dynamic action) {
-  if (action is AuthSuccessAction) {
-    return true;
-  } else if (action is AuthFailureAction) {
-    return false;
-  }
-  return isAuthenticated;
-}
-
 String authTokenReducer(String authToken, dynamic action) {
   if (action is AuthSuccessAction) {
     return action.token;
@@ -50,7 +42,21 @@ String authTokenReducer(String authToken, dynamic action) {
 
 String authErrorReducer(String authError, dynamic action) {
   if (action is AuthFailureAction) {
-    return action.error;
+    return action.authError;
   }
   return authError;
+}
+
+String regErrorReducer(String regError, dynamic action) {
+  if (action is RegFailureAction) {
+    return action.regError;
+  }
+  return regError;
+}
+
+String regSuccessReducer(String regSuccess, dynamic action) {
+  if (action is RegSuccessAction) {
+    return action.regSuccess;
+  }
+  return regSuccess;
 }

@@ -3,8 +3,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
- <persistence-unit name="test-resource_PersistenceUnit">
-  <jta-data-source>	jdbc/test-resource</jta-data-source>
+ <persistence-unit name="test-resource_PersistenceUnit" transaction-type="RESOURCE_LOCAL">
+  <non-jta-data-source>jdbc/test-resource</non-jta-data-source>
  </persistence-unit>
  
 </persistence>

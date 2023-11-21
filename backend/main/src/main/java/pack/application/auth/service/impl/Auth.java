@@ -4,6 +4,8 @@ import pack.application.auth.service.api.Authorizable;
 import pack.application.auth.service.api.Tokenable;
 import pack.application.auth.service.api.UserRepositable;
 import pack.application.auth.service.impl.dto.User;
+import pack.application.auth.service.status.UserAddStatus;
+import pack.application.auth.service.status.UserCheckStatus;
 
 public class Auth implements Authorizable {
 
@@ -21,14 +23,14 @@ public class Auth implements Authorizable {
     }
 
     @Override
-    public Boolean checkUser(User user) throws Exception {
-        Boolean status = repository.checkUser(user.getLogin(), user.getPassword());
+    public UserCheckStatus checkUser(User user) throws Exception {
+        UserCheckStatus status = repository.checkUser(user.getLogin(), user.getPassword());
         return status;
     }
 
     @Override
-    public Boolean addUser(User user) throws Exception {
-        Boolean status = repository.addUser(user.getLogin(), user.getPassword(), user.getEmail());
+    public UserAddStatus addUser(User user) throws Exception {
+        UserAddStatus status = repository.addUser(user.getLogin(), user.getPassword(), user.getEmail());
         return status;
     }
 

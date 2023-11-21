@@ -1,5 +1,6 @@
 pack\infrastructure\controller\rest\user\UserController.class
 pack\application\auth\service\api\UserRepositable.class
+pack\application\auth\service\status\UserCheckStatus.class
 pack\infrastructure\builder\Built.class
 pack\application\auth\service\api\Tokenable.class
 pack\infrastructure\interceptor\Interceptor.class
@@ -7,8 +8,8 @@ pack\application\token\Token.class
 pack\infrastructure\builder\user\UserBuilder.class
 pack\infrastructure\controller\rest\user\UserController$1.class
 pack\application\auth\service\api\Authorizable.class
+pack\application\auth\service\status\UserAddStatus.class
 pack\infrastructure\repository\user\UserRepository.class
-pack\infrastructure\controller\rest\user\UserController$2.class
 pack\application\token\TokenIssuer.class
 pack\infrastructure\config\Filter.class
 pack\application\auth\service\impl\dto\User.class

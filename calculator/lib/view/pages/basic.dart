@@ -4,8 +4,8 @@ import '/state/state.dart';
 import "/state/actions.dart";
 
 
-class BasicCalculatorScreenState extends StatelessWidget {
-  const BasicCalculatorScreenState({super.key});
+class BasicCalculatorScreen extends StatelessWidget {
+  const BasicCalculatorScreen({super.key});
 
 
   @override

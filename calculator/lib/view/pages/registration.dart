@@ -4,25 +4,37 @@ import 'package:redux/redux.dart';
 
 import '../../state/state.dart';
 import '../../state/actions.dart';
-import 'registration.dart';
 import '/view/widgets/drawer.dart';
 
-class LoginScreen extends StatelessWidget {
+class RegMessageData {
+  final String regError;
+  final String regSuccess;
+
+  RegMessageData({required this.regError, required this.regSuccess});
+}
+
+class RegistrationScreen extends StatelessWidget {
   final Store<AppState> store;
 
-  LoginScreen({Key? key, required this.store}) : super(key: key);
+  RegistrationScreen({Key? key, required this.store}) : super(key: key);
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, String>(
-        converter: (store) => store.state.authError,
-        builder: (context, authError) {
+    return StoreConnector<AppState, RegMessageData>(
+        converter: (store) {
+          return RegMessageData(
+            regError: store.state.regError,
+            regSuccess: store.state.regSuccess,
+          );
+        },
+        builder: (context, messageData) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Авторизация'),
+              title: const Text('Регистрация'),
             ),
             drawer: AppDrawer(store: store),
             body: Padding(
@@ -44,28 +56,31 @@ class LoginScreen extends StatelessWidget {
                       labelText: 'Пароль',
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Почта',
+                    ),
+                  ),
                   const SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () {
                       final username = usernameController.text;
                       final password = passwordController.text;
-                      store.dispatch(AuthRequestAction(username, password));
+                      final email = emailController.text;
+                      store.dispatch(RegRequestAction(username, password, email));
                     },
-                    child: const Text('Войти'),
+                    child: const Text('Создать аккаунт'),
                   ),
                   const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegistrationScreen(store: store)),
-                      );
-                    },
-                    child: const Text('Регистрация'),
+                  Text(
+                    messageData.regError,
+                    style: const TextStyle(fontSize: 16.0, color: Colors.red),
                   ),
                   Text(
-                    authError,
-                    style: const TextStyle(fontSize: 16.0, color: Colors.red),
+                    messageData.regSuccess,
+                    style: const TextStyle(fontSize: 16.0, color: Colors.green),
                   ),
                 ],
               ),
