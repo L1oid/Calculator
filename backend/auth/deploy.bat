@@ -1,1 +1,0 @@
-asadmin deploy --force=true ./target/auth.war
