@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'state/store.dart';
 import 'view/pages/home.dart';
-import '/state/store.dart';
 
 void main() {
   final store = createStore();
-  runApp(HomeScreen(store: store));
+  runApp(
+    StoreProvider(
+      store: store,
+      child: const HomeScreen(),
+    ),
+  );
 }

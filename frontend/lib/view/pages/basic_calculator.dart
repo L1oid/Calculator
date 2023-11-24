@@ -1,19 +1,29 @@
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import '/view/widgets/drawer.dart';
 import '/state/state.dart';
-import "/state/actions.dart";
-
+import '/state/actions.dart';
 
 class BasicCalculatorScreen extends StatelessWidget {
-  const BasicCalculatorScreen({super.key});
-
+  const BasicCalculatorScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, String>(
-      converter: (store) => store.state.expression,
-      builder: (context, expression) {
+    return StoreBuilder<AppState>(
+      builder: (context, store) {
         return Scaffold(
+          appBar: AppBar(
+            title: const Text('Лучший калькулятор на планете'),
+            leading: Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            ),
+          ),
+          drawer: const AppDrawer(),
           body: Column(
             children: <Widget>[
               Expanded(
@@ -21,7 +31,7 @@ class BasicCalculatorScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    expression,
+                    store.state.expression,
                     style: const TextStyle(fontSize: 24.0),
                   ),
                 ),

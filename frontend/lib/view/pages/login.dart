@@ -1,30 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-
-import '../../state/state.dart';
-import '../../state/actions.dart';
-import 'registration.dart';
+import '/state/state.dart';
+import '/state/actions.dart';
 import '/view/widgets/drawer.dart';
+import '/view/pages/registration.dart';
+import '/view/pages/account.dart';
 
 class LoginScreen extends StatelessWidget {
-  final Store<AppState> store;
-
-  LoginScreen({Key? key, required this.store}) : super(key: key);
-
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, String>(
-        converter: (store) => store.state.authError,
-        builder: (context, authError) {
+    return StoreBuilder<AppState>(
+      builder: (context, store) {
+        final TextEditingController usernameController = TextEditingController();
+        final TextEditingController passwordController = TextEditingController();
+
+
+        if (store.state.authToken != '') {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const AccountScreen()),
+            );
+          });
+          return const SizedBox.shrink();
+        } else {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Авторизация'),
+              title: const Text('Вход'),
             ),
-            drawer: AppDrawer(store: store),
+            drawer: const AppDrawer(),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -58,13 +63,13 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RegistrationScreen(store: store)),
+                        MaterialPageRoute(builder: (context) => const RegistrationScreen()),
                       );
                     },
                     child: const Text('Регистрация'),
                   ),
                   Text(
-                    authError,
+                    store.state.authError,
                     style: const TextStyle(fontSize: 16.0, color: Colors.red),
                   ),
                 ],
@@ -72,6 +77,7 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         }
+      },
     );
   }
 }
