@@ -12,6 +12,12 @@ class AddSymbolAction {
   AddSymbolAction(this.symbol);
 }
 
+class SlaeResultAction {
+  final List<List<double>> slaeMatrix;
+
+  SlaeResultAction(this.slaeMatrix);
+}
+
 class AuthRequestAction {
   final String username;
   final String password;

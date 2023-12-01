@@ -1,8 +1,15 @@
 import 'api/calculator_interface.dart';
 import 'basic_calculator.dart';
+import 'slae_calculator.dart';
 
-class CalculatorFactory {
-  static Calculator createCalculator() {
+class BasicCalculatorFactory {
+  static BasicCalculatorInterface createCalculator() {
     return BasicCalculator();
+  }
+}
+
+class SlaeCalculatorFactory {
+  static SlaeCalculatorInterface createCalculator() {
+    return SlaeCalculator();
   }
 }

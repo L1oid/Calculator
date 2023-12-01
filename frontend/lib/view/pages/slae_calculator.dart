@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:frontend/state/actions.dart';
 import '/state/state.dart';
 import '/view/widgets/drawer.dart';
 import 'login.dart';
@@ -11,6 +12,9 @@ class SlaeCalculatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder<AppState>(
       builder: (context, store) {
+
+        late List<List<TextEditingController>> controllers;
+
         if (store.state.authToken == '') {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.of(context).pushReplacement(
@@ -19,6 +23,11 @@ class SlaeCalculatorScreen extends StatelessWidget {
           });
           return const SizedBox.shrink();
         } else {
+          controllers = List.generate(
+            3,
+                (rowIndex) => List.generate(4, (colIndex) => TextEditingController()),
+          );
+
           return Scaffold(
             appBar: AppBar(
               title: const Text('СЛАУ Калькулятор'),
@@ -39,7 +48,7 @@ class SlaeCalculatorScreen extends StatelessWidget {
                             if (colIndex < (4 - 2)) {
                               return Row(
                                 children: [
-                                  buildTextField(),
+                                  buildTextField(rowIndex, colIndex, controllers),
                                   const SizedBox(width: 8.0),
                                   Text("x${colIndex + 1}", style: const TextStyle(fontSize: 24.0)),
                                   const SizedBox(width: 8.0),
@@ -50,7 +59,7 @@ class SlaeCalculatorScreen extends StatelessWidget {
                             } else if (colIndex == (4 - 2)) {
                               return Row(
                                 children: [
-                                  buildTextField(),
+                                  buildTextField(rowIndex, colIndex, controllers),
                                   const SizedBox(width: 8.0),
                                   Text("x${colIndex + 1}", style: const TextStyle(fontSize: 24.0)),
                                   const SizedBox(width: 8.0),
@@ -59,7 +68,7 @@ class SlaeCalculatorScreen extends StatelessWidget {
                                 ],
                               );
                             } else {
-                              return buildTextField();
+                              return buildTextField(rowIndex, colIndex, controllers);
                             }
                           },
                         ),
@@ -69,9 +78,27 @@ class SlaeCalculatorScreen extends StatelessWidget {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-
+                      List<List<double>> matrix = controllers.map((rowControllers) =>
+                          rowControllers.map((controller) => double.parse(controller.text)).toList()).toList();
+                      store.dispatch(SlaeResultAction(matrix));
                     },
                     child: const Text('Решить'),
+                  ),
+                  const SizedBox(height: 16.0),
+                  if (store.state.slaeResult != "")
+                    const Text(
+                      "Ответ:",
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                  const SizedBox(height: 16.0),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        store.state.slaeResult,
+                        style: const TextStyle(fontSize: 24.0),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -82,12 +109,13 @@ class SlaeCalculatorScreen extends StatelessWidget {
     );
   }
 
-  Widget buildTextField() {
-    return const SizedBox(
+  Widget buildTextField(int rowIndex, int colIndex, List<List<TextEditingController>> controllers) {
+    return SizedBox(
       width: 50,
       child: TextField(
+        controller: controllers[rowIndex][colIndex],
         keyboardType: TextInputType.number,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
         ),
       ),

@@ -4,6 +4,7 @@ class AppState {
   final String authError;
   final String regError;
   final String regSuccess;
+  final String slaeResult;
 
-  AppState(this.expression, this.authToken, this.authError, this.regError, this.regSuccess);
+  AppState(this.expression, this.authToken, this.authError, this.regError, this.regSuccess, this.slaeResult);
 }

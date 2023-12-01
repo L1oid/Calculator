@@ -1,6 +1,6 @@
 import 'api/calculator_interface.dart';
 
-class BasicCalculator implements Calculator {
+class BasicCalculator implements BasicCalculatorInterface {
   @override
   double calculate(String input) {
     final tokens = tokenize(input);

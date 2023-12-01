@@ -8,8 +8,29 @@ AppState appReducer(AppState state, dynamic action) {
     authTokenReducer(state.authToken, action),
     authErrorReducer(state.authError, action),
     regErrorReducer(state.regError, action),
-    regSuccessReducer(state.regSuccess, action)
+    regSuccessReducer(state.regSuccess, action),
+    slaeResultReducer(state.slaeResult, action)
   );
+}
+
+String slaeResultReducer(String slaeResult, dynamic action) {
+  if (action is SlaeResultAction) {
+    final slaeCalculator = SlaeCalculatorFactory.createCalculator();
+    try {
+      final result = slaeCalculator.calculate(action.slaeMatrix);
+      for (int i = 0; i < 3; i++) {
+        slaeResult += "x${i + 1} = ";
+        slaeResult += result[i].toString();
+        slaeResult += ";";
+        if (i != 2) {
+          slaeResult += "    ";
+        }
+      }
+    } catch (e) {
+      slaeResult = e.toString();
+    }
+  }
+  return slaeResult;
 }
 
 String expressionReducer(String expression, dynamic action) {
@@ -22,9 +43,9 @@ String expressionReducer(String expression, dynamic action) {
   } else if (action is ClearExpressionAction) {
     return '';
   } else if (action is CalculateAction) {
-    final calculator = CalculatorFactory.createCalculator();
+    final basicCalculator = BasicCalculatorFactory.createCalculator();
     try {
-      final result = calculator.calculate(expression);
+      final result = basicCalculator.calculate(expression);
       expression = result.toString();
     } catch (e) {
       expression = e.toString();
