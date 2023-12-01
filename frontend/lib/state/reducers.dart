@@ -36,6 +36,8 @@ String expressionReducer(String expression, dynamic action) {
 String authTokenReducer(String authToken, dynamic action) {
   if (action is AuthSuccessAction) {
     return action.token;
+  } else if (action is LogoutAction) {
+    authToken = "";
   }
   return authToken;
 }

@@ -6,7 +6,7 @@ import 'middleware.dart';
 Store<AppState> createStore() {
   return Store(
     appReducer,
-    initialState: AppState('', '', '', '', ''), // Include an empty string as the initial token
+    initialState: AppState('', '', '', '', ''),
     middleware: [authMiddleware(), regMiddleware()],
   );
 }

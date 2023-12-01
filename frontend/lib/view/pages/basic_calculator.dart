@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import '/view/widgets/drawer.dart';
 import '/state/state.dart';
 import '/state/actions.dart';
+import '/view/widgets/drawer.dart';
 
 class BasicCalculatorScreen extends StatelessWidget {
   const BasicCalculatorScreen({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class BasicCalculatorScreen extends StatelessWidget {
       builder: (context, store) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Лучший калькулятор на планете'),
+            title: const Text('Калькулятор'),
             leading: Builder(
               builder: (context) => IconButton(
                 icon: const Icon(Icons.menu),

@@ -1,14 +1,16 @@
-class AddSymbolAction {
-  final String symbol;
-
-  AddSymbolAction(this.symbol);
-}
+class LogoutAction {}
 
 class ClearSymbolAction {}
 
 class ClearExpressionAction {}
 
 class CalculateAction {}
+
+class AddSymbolAction {
+  final String symbol;
+
+  AddSymbolAction(this.symbol);
+}
 
 class AuthRequestAction {
   final String username;

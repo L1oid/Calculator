@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import '../../state/actions.dart';
 import '/state/state.dart';
 import '/view/pages/login.dart';
 import '/view/pages/basic_calculator.dart';
+import '/view/pages/slae_calculator.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -48,10 +50,24 @@ class AppDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     title: const Text('СЛАУ калькулятор'),
-                    onTap: () {
-
-                    },
-                  )
+                    onTap: store.state.authToken != '' ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SlaeCalculatorScreen()),
+                      );
+                    } : null,
+                    enabled: store.state.authToken != '',
+                  ),
+                  if (store.state.authToken != '')
+                    ListTile(
+                      title: const Text(
+                        'Выйти',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onTap: () {
+                        store.dispatch(LogoutAction());
+                      },
+                    ),
                 ],
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import '/state/state.dart';
-import 'basic_calculator.dart';
+import '/view/pages/basic_calculator.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
