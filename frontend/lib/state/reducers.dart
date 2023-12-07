@@ -17,15 +17,7 @@ String slaeResultReducer(String slaeResult, dynamic action) {
   if (action is SlaeResultAction) {
     final slaeCalculator = SlaeCalculatorFactory.createCalculator();
     try {
-      final result = slaeCalculator.calculate(action.slaeMatrix);
-      for (int i = 0; i < 3; i++) {
-        slaeResult += "x${i + 1} = ";
-        slaeResult += result[i].toString();
-        slaeResult += ";";
-        if (i != 2) {
-          slaeResult += "    ";
-        }
-      }
+      slaeResult = slaeCalculator.calculate(action.slaeMatrix);
     } catch (e) {
       slaeResult = e.toString();
     }

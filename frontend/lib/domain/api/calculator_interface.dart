@@ -3,5 +3,5 @@ abstract class BasicCalculatorInterface {
 }
 
 abstract class SlaeCalculatorInterface {
-  List<double> calculate(List<List<double>> matrix);
+  String calculate(List<List<double>> matrix);
 }

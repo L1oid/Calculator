@@ -15,8 +15,44 @@ class AccountScreen extends StatelessWidget {
             title: const Text('Личный кабинет'),
           ),
           drawer: const AppDrawer(),
-          body: const Padding(
-            padding: EdgeInsets.all(16.0),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: SizedBox(
+                width: 300,
+                child: ListView(
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+
+                      },
+                      child: const Text('Мои данные'),
+                    ),
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+
+                      },
+                      child: const Text('Полная версия'),
+                    ),
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+
+                      },
+                      child: const Text('Сменить пароль'),
+                    ),
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () {
+
+                      },
+                      child: const Text('Удалить аккаунт'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         );
       },

@@ -37,6 +37,8 @@ class SlaeCalculatorScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  const Text("Метод Гаусса", style: TextStyle(fontSize: 24.0)),
+                  const SizedBox(height: 16.0),
                   Column(
                     children: List.generate(
                       3,
@@ -86,10 +88,7 @@ class SlaeCalculatorScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16.0),
                   if (store.state.slaeResult != "")
-                    const Text(
-                      "Ответ:",
-                      style: TextStyle(fontSize: 24.0),
-                    ),
+                    const Text("Ответ:", style: TextStyle(fontSize: 24.0)),
                   const SizedBox(height: 16.0),
                   Expanded(
                     child: Container(
