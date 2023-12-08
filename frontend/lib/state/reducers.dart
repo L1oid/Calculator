@@ -9,8 +9,40 @@ AppState appReducer(AppState state, dynamic action) {
     authErrorReducer(state.authError, action),
     regErrorReducer(state.regError, action),
     regSuccessReducer(state.regSuccess, action),
-    slaeResultReducer(state.slaeResult, action)
+    slaeResultReducer(state.slaeResult, action),
+    usernameReducer(state.username, action),
+    emailReducer(state.email, action),
+    errorChangePasswordReducer(state.errorChangePassword, action),
+    successChangePasswordReducer(state.successChangePassword, action)
   );
+}
+
+String errorChangePasswordReducer(String errorChangePassword, dynamic action) {
+  if (action is ChangePasswordMessageAction) {
+    return action.errorChangePassword;
+  }
+  return errorChangePassword;
+}
+
+String successChangePasswordReducer(String successChangePassword, dynamic action) {
+  if (action is ChangePasswordMessageAction) {
+    return action.successChangePassword;
+  }
+  return successChangePassword;
+}
+
+String usernameReducer(String username, dynamic action) {
+  if (action is UsernameSaveAction) {
+    return action.username;
+  }
+  return username;
+}
+
+String emailReducer(String email, dynamic action) {
+  if (action is EmailSaveAction) {
+    return action.email;
+  }
+  return email;
 }
 
 String slaeResultReducer(String slaeResult, dynamic action) {

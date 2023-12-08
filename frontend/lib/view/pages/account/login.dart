@@ -3,8 +3,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '/state/state.dart';
 import '/state/actions.dart';
 import '/view/widgets/drawer.dart';
-import '/view/pages/registration.dart';
-import '/view/pages/account.dart';
+import 'registration.dart';
+import 'account.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -55,6 +55,7 @@ class LoginScreen extends StatelessWidget {
                       final username = usernameController.text;
                       final password = passwordController.text;
                       store.dispatch(AuthRequestAction(username, password));
+
                     },
                     child: const Text('Войти'),
                   ),

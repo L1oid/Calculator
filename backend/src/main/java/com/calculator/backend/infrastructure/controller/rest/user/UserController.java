@@ -13,11 +13,12 @@ import jakarta.json.bind.JsonbException;
 import jakarta.inject.Inject;
 
 import com.calculator.backend.application.auth.service.impl.dto.User;
+import com.calculator.backend.application.auth.service.impl.dto.UserCheckResult;
 import com.calculator.backend.application.auth.service.api.Authorizable;
 import com.calculator.backend.application.auth.service.api.Tokenable;
-import com.calculator.backend.application.auth.service.status.UserAddStatus;
-import com.calculator.backend.application.auth.service.status.UserCheckStatus;
+import com.calculator.backend.application.auth.service.status.UserStatus;
 import com.calculator.backend.infrastructure.builder.Built;
+import com.calculator.backend.infrastructure.controller.rest.user.dto.AuthenticationResult;
 
 @Path("/users")
 public class UserController {
@@ -38,12 +39,16 @@ public class UserController {
     public Response authenticateUser(String userJson) {
         try {
             User user = jsonb.fromJson(userJson, User.class);
-            UserCheckStatus status = model.checkUser(user);
+            UserCheckResult result = model.checkUser(user);
+            UserStatus status = result.getStatus();
+            AuthenticationResult authenticationResult;
 
             switch (status) {
                 case SUCCESSFUL_AUTHENTICATION:
                     String token = tokenable.createToken(user);
-                    return Response.ok(jsonb.toJson(token)).build();
+                    String email = result.getEmail();
+                    authenticationResult = new AuthenticationResult(token, email);
+                    return Response.ok(jsonb.toJson(authenticationResult)).build();
                 case INCORRECT_PASSWORD:
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("IncorrectPassword")).build();
                 case USER_NOT_FOUND:
@@ -65,7 +70,7 @@ public class UserController {
     public Response registerUser(String userJson) {
         try {
             User user = jsonb.fromJson(userJson, User.class);
-            UserAddStatus status = model.addUser(user);
+            UserStatus status = model.addUser(user);
 
             switch (status) {
                 case SUCCESSFUL_REGISTRATION:
@@ -74,6 +79,32 @@ public class UserController {
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserAlreadyExist")).build();
                 case EMAIL_ALREADY_EXISTS:
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("EmailAlreadyExist")).build();
+                default:
+                    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
+            }
+        } catch (JsonbException e) {
+            return handleJsonbException(e);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @POST
+    @Path("/change_password")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response changePassword(String passwordJson) {
+        try {
+            User user = jsonb.fromJson(passwordJson, User.class);
+            UserStatus status = model.changePassword(user);
+
+            switch (status) {
+                case SUCCESSFUL_CHANGE_PASSWORD:
+                    return Response.ok(jsonb.toJson("SuccessChangePassword")).build();
+                case INCORRECT_PASSWORD:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("IncorrectPassword")).build();
+                case USER_NOT_FOUND:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
                 default:
                     return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             }

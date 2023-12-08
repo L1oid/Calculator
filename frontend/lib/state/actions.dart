@@ -56,3 +56,32 @@ class RegSuccessAction {
 
   RegSuccessAction(this.regSuccess);
 }
+
+class UsernameSaveAction {
+  final String username;
+
+  UsernameSaveAction(this.username);
+}
+
+class EmailSaveAction {
+  final String email;
+
+  EmailSaveAction(this.email);
+}
+
+class ChangePasswordAction {
+  final String currentPassword;
+  final String newPassword;
+  final String repeatPassword;
+
+  ChangePasswordAction(this.currentPassword,
+      this.newPassword,
+      this.repeatPassword);
+}
+
+class ChangePasswordMessageAction {
+  final String errorChangePassword;
+  final String successChangePassword;
+
+  ChangePasswordMessageAction(this.errorChangePassword, this.successChangePassword);
+}

@@ -1,9 +1,10 @@
 package com.calculator.backend.application.auth.service.api;
 
-import com.calculator.backend.application.auth.service.status.UserAddStatus;
-import com.calculator.backend.application.auth.service.status.UserCheckStatus;
+import com.calculator.backend.application.auth.service.impl.dto.UserCheckResult;
+import com.calculator.backend.application.auth.service.status.UserStatus;
 
 public interface UserRepositable {
-    UserCheckStatus checkUser(String login, String password) throws Exception;
-    UserAddStatus addUser(String login, String password, String email) throws Exception;
+    UserCheckResult checkUser(String login, String password) throws Exception;
+    UserStatus addUser(String login, String password, String email) throws Exception;
+    UserStatus changePassword(String login, String password, String newPassword) throws Exception;
 }

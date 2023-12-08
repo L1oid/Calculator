@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import '../../state/actions.dart';
 import '/state/state.dart';
-import '/view/pages/login.dart';
-import '/view/pages/basic_calculator.dart';
-import '/view/pages/slae_calculator.dart';
+import '../pages/account/login.dart';
+import '../pages/calculators/basic_calculator.dart';
+import '../pages/calculators/slae_calculator.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});

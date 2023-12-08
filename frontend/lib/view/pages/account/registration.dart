@@ -19,7 +19,6 @@ class RegistrationScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Регистрация'),
           ),
-          drawer: const AppDrawer(),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

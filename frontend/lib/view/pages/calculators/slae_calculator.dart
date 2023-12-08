@@ -3,7 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:frontend/state/actions.dart';
 import '/state/state.dart';
 import '/view/widgets/drawer.dart';
-import 'login.dart';
+import '/view/pages/account/login.dart';
 
 class SlaeCalculatorScreen extends StatelessWidget {
   const SlaeCalculatorScreen({Key? key}) : super(key: key);

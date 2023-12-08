@@ -4,8 +4,8 @@ import com.calculator.backend.application.auth.service.api.Authorizable;
 import com.calculator.backend.application.auth.service.api.Tokenable;
 import com.calculator.backend.application.auth.service.api.UserRepositable;
 import com.calculator.backend.application.auth.service.impl.dto.User;
-import com.calculator.backend.application.auth.service.status.UserAddStatus;
-import com.calculator.backend.application.auth.service.status.UserCheckStatus;
+import com.calculator.backend.application.auth.service.impl.dto.UserCheckResult;
+import com.calculator.backend.application.auth.service.status.UserStatus;
 
 public class Auth implements Authorizable {
 
@@ -22,27 +22,27 @@ public class Auth implements Authorizable {
         this.useToken = useToken;
     }
 
-    @Override
-    public UserCheckStatus checkUser(User user) throws Exception {
-        UserCheckStatus status = repository.checkUser(user.getLogin(), user.getPassword());
-        return status;
+    public UserStatus changePassword(User user) throws Exception {
+        return repository.changePassword(user.getLogin(), user.getPassword(), user.getNewPassword());
     }
 
     @Override
-    public UserAddStatus addUser(User user) throws Exception {
-        UserAddStatus status = repository.addUser(user.getLogin(), user.getPassword(), user.getEmail());
-        return status;
+    public UserCheckResult checkUser(User user) throws Exception {
+        return repository.checkUser(user.getLogin(), user.getPassword());
+    }
+
+    @Override
+    public UserStatus addUser(User user) throws Exception {
+        return repository.addUser(user.getLogin(), user.getPassword(), user.getEmail());
     }
 
     @Override
     public String createToken(User user) {
-        String token = useToken.createToken(user);
-        return token;
+        return useToken.createToken(user);
     }
 
     @Override
     public Boolean checkToken(User user, String token) {
-        Boolean status = useToken.checkToken(user, token);
-        return status;
+        return useToken.checkToken(user, token);
     }
 }

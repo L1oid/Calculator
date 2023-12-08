@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 import jakarta.persistence.*;
 
 import com.calculator.backend.application.auth.service.api.UserRepositable;
-import com.calculator.backend.application.auth.service.status.UserAddStatus;
-import com.calculator.backend.application.auth.service.status.UserCheckStatus;
+import com.calculator.backend.application.auth.service.status.UserStatus;
+import com.calculator.backend.application.auth.service.impl.dto.UserCheckResult;
 
 public class UserRepository implements UserRepositable {
 
@@ -17,28 +17,62 @@ public class UserRepository implements UserRepositable {
     private EntityManagerFactory entityManagerFactory;
 
     @Override
-    public UserCheckStatus checkUser(String login, String password) throws Exception {
+    public UserCheckResult checkUser(String login, String password) throws Exception {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             TypedQuery<EUser> query = entityManager.createQuery("SELECT u FROM EUser u WHERE u.login = :login", EUser.class);
             List<EUser> users = query.setParameter("login", login).getResultList();
 
             if (!users.isEmpty()) {
                 if (users.get(0).getPassword().equals(password)) {
-                    return UserCheckStatus.SUCCESSFUL_AUTHENTICATION;
+                    String email = users.get(0).getEmail();
+                    return new UserCheckResult(UserStatus.SUCCESSFUL_AUTHENTICATION, email);
                 } else {
-                    return UserCheckStatus.INCORRECT_PASSWORD;
+                    return new UserCheckResult(UserStatus.INCORRECT_PASSWORD, null);
                 }
             } else {
-                return UserCheckStatus.USER_NOT_FOUND;
+                return new UserCheckResult(UserStatus.USER_NOT_FOUND, null);
             }
         } catch (Exception ex) {
             logger.severe("Error while checking user: " + ex.getMessage());
-            return UserCheckStatus.ERROR;
+            return new UserCheckResult(UserStatus.ERROR, null);
         }
     }
 
     @Override
-    public UserAddStatus addUser(String login, String password, String email) throws Exception {
+    public UserStatus changePassword(String login, String password, String newPassword) throws Exception {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            try {
+
+                TypedQuery<EUser> query = entityManager.createQuery("SELECT u FROM EUser u WHERE u.login = :login", EUser.class);
+                List<EUser> users = query.setParameter("login", login).getResultList();
+
+                if (!users.isEmpty()) {
+                    EUser user = users.get(0);
+                    if (user.getPassword().equals(password)) {
+                        transaction.begin();
+                        user.setPassword(newPassword);
+                        transaction.commit();
+                        return UserStatus.SUCCESSFUL_CHANGE_PASSWORD;
+                    } else {
+                        return UserStatus.INCORRECT_PASSWORD;
+                    }
+                } else {
+                    return UserStatus.USER_NOT_FOUND;
+                }
+            } catch (Exception ex) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+                logger.severe("Error while checking user: " + ex.getMessage());
+                return UserStatus.ERROR;
+            }
+        }
+    }
+
+    @Override
+    public UserStatus addUser(String login, String password, String email) throws Exception {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             EntityTransaction transaction = entityManager.getTransaction();
 
@@ -49,14 +83,14 @@ public class UserRepository implements UserRepositable {
                 List<EUser> users = query.setParameter("login", login).getResultList();
 
                 if (!users.isEmpty()) {
-                    return UserAddStatus.USER_ALREADY_EXISTS;
+                    return UserStatus.USER_ALREADY_EXISTS;
                 }
 
                 query = entityManager.createQuery("SELECT u FROM EUser u WHERE u.email = :email", EUser.class);
                 users = query.setParameter("email", email).getResultList();
 
                 if (!users.isEmpty()) {
-                    return UserAddStatus.EMAIL_ALREADY_EXISTS;
+                    return UserStatus.EMAIL_ALREADY_EXISTS;
                 }
 
                 EUser newUser = new EUser(login, password, email);
@@ -64,13 +98,13 @@ public class UserRepository implements UserRepositable {
                 transaction.commit();
 
                 logger.info("User successfully registered: " + login);
-                return UserAddStatus.SUCCESSFUL_REGISTRATION;
+                return UserStatus.SUCCESSFUL_REGISTRATION;
             } catch (Exception ex) {
                 if (transaction != null && transaction.isActive()) {
                     transaction.rollback();
                 }
                 logger.severe("Error while adding user: " + ex.getMessage());
-                return UserAddStatus.ERROR;
+                return UserStatus.ERROR;
             }
         }
     }

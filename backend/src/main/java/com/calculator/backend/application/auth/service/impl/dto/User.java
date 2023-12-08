@@ -3,7 +3,16 @@ package com.calculator.backend.application.auth.service.impl.dto;
 public class User {
     private String login;
     private String password;
+    private String newPassword;
     private String email;
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
 
     public void setPassword(String password) {
         this.password = password;
