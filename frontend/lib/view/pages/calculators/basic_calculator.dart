@@ -14,14 +14,6 @@ class BasicCalculatorScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Калькулятор'),
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
-            ),
           ),
           drawer: const AppDrawer(),
           body: Column(

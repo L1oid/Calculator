@@ -36,13 +36,6 @@ class AccountScreen extends StatelessWidget {
                     const SizedBox(height: 16.0),
                     ElevatedButton(
                       onPressed: () {
-
-                      },
-                      child: const Text('Полная версия', style: TextStyle(fontSize: 16.0)),
-                    ),
-                    const SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),

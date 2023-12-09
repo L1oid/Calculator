@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:frontend/view/pages/chat/chat.dart';
 import '../../state/actions.dart';
 import '/state/state.dart';
 import '../pages/account/login.dart';
@@ -54,6 +55,16 @@ class AppDrawer extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const SlaeCalculatorScreen()),
+                      );
+                    } : null,
+                    enabled: store.state.authToken != '',
+                  ),
+                  ListTile(
+                    title: const Text('Чат'),
+                    onTap: store.state.authToken != '' ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatScreen(login: store.state.username)),
                       );
                     } : null,
                     enabled: store.state.authToken != '',
