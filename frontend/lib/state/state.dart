@@ -14,6 +14,8 @@ class AppState {
   final String regError;
   final String regSuccess;
 
+  final List<Map<String, String>> messages;
+
   AppState(this.expression,
       this.authToken,
       this.authError,
@@ -23,5 +25,6 @@ class AppState {
       this.username,
       this.email,
       this.successChangePassword,
-      this.errorChangePassword);
+      this.errorChangePassword,
+      this.messages);
 }

@@ -1,6 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import '../../../state/actions.dart';
+import '../../../state/state.dart';
 
 class ChatScreen extends StatefulWidget {
   final String login;
@@ -12,29 +14,23 @@ class ChatScreen extends StatefulWidget {
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  late WebSocketChannel channel;
   final TextEditingController messageController = TextEditingController();
-  final List<Map<String, String>> messages = [];
+  late Store<AppState> store;
 
   @override
   void initState() {
     super.initState();
-    channel = WebSocketChannel.connect(Uri.parse('ws://localhost:8080/backend-1.0-SNAPSHOT/chat/${widget.login}'));
-    channel.stream.listen((message) {
-      getMessage(message);
-    });
   }
 
-  void getMessage(String message) {
-    Map<String, String> decodedMessage = Map<String, String>.from(jsonDecode(message));
-    setState(() {
-      messages.add(decodedMessage);
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    store = StoreProvider.of<AppState>(context);
+    store.dispatch(ConnectWebSocketAction());
   }
 
   void sendMessage(String text) {
-    Map<String, String> message = {'text': text};
-    channel.sink.add(jsonEncode(message));
+    store.dispatch(SendMessageAction(text));
   }
 
   @override
@@ -47,9 +43,9 @@ class ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: messages.length,
+              itemCount: store.state.messages.length,
               itemBuilder: (context, index) {
-                var message = messages[index];
+                var message = store.state.messages[index];
                 return ListTile(
                   title: Text(message['username'] ?? ''),
                   subtitle: Text(message['text'] ?? ''),
@@ -72,7 +68,7 @@ class ChatScreenState extends State<ChatScreen> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    sendMessage(messageController.text);
+                    store.dispatch(SendMessageAction(messageController.text));
                     messageController.clear();
                   },
                 ),
@@ -86,7 +82,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    channel.sink.close();
+    store.dispatch(CloseWebSocketAction());
     super.dispose();
   }
 }

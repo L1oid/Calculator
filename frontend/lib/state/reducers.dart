@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'state.dart';
 import '/domain/calculator_factory.dart';
 import 'actions.dart';
@@ -13,8 +14,18 @@ AppState appReducer(AppState state, dynamic action) {
     usernameReducer(state.username, action),
     emailReducer(state.email, action),
     errorChangePasswordReducer(state.errorChangePassword, action),
-    successChangePasswordReducer(state.successChangePassword, action)
+    successChangePasswordReducer(state.successChangePassword, action),
+    sendChatMessageReducer(state.messages, action)
   );
+}
+
+List<Map<String, String>> sendChatMessageReducer(List<Map<String, String>> messages, dynamic action) {
+  if (action is ReceiveMessageAction) {
+    Map<String, String> decodedMessage = Map<String, String>.from(jsonDecode(action.message));
+    return List.from(messages)..add(decodedMessage);
+  } else {
+    return messages;
+  }
 }
 
 String errorChangePasswordReducer(String errorChangePassword, dynamic action) {

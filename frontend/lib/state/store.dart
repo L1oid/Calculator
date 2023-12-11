@@ -6,7 +6,7 @@ import 'middleware.dart';
 Store<AppState> createStore() {
   return Store(
     appReducer,
-    initialState: AppState('', '', '', '', '', '', '', '', '', ''),
-    middleware: [userMiddleware()]
+    initialState: AppState('', '', '', '', '', '', '', '', '', '', []),
+    middleware: [userMiddleware(), chatMiddleware()]
   );
 }
