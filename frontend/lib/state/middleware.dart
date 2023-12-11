@@ -17,7 +17,7 @@ Middleware<AppState> userMiddleware() {
         final response = await http.post(
           Uri.parse('http://localhost:8080/backend-1.0-SNAPSHOT/api/users/authenticate'),
           headers: {
-            'Content-Type': 'application/json;charset=utf-8',
+            'Content-Type': 'application/json;charset=utf-8'
           },
           body: jsonEncode(requestBody),
         );
@@ -27,24 +27,21 @@ Middleware<AppState> userMiddleware() {
           final token = data['token'];
           final email = data['email'];
 
-          store.dispatch(AuthFailureAction(""));
-          store.dispatch(AuthSuccessAction(token));
+          store.dispatch(AuthMessageAction("", token));
           store.dispatch(UsernameSaveAction(action.username));
           store.dispatch(EmailSaveAction(email));
         } else if (response.statusCode == 401) {
           final errorMessage = json.decode(response.body);
           if (errorMessage == "UserNotFound") {
-            store.dispatch(AuthFailureAction("Такого пользователя не существует"));
+            store.dispatch(AuthMessageAction("Такого пользователя не существует", ""));
           } else if (errorMessage == "IncorrectPassword") {
-            store.dispatch(AuthFailureAction("Неверный пароль"));
-          } else {
-            store.dispatch(AuthFailureAction("Неизвестная ошибка"));
+            store.dispatch(AuthMessageAction("Неверный пароль", ""));
           }
         } else {
-          store.dispatch(AuthFailureAction("Неизвестная ошибка"));
+          store.dispatch(AuthMessageAction("Неизвестная ошибка", ""));
         }
       } catch (error) {
-        store.dispatch(AuthFailureAction("Неизвестная ошибка"));
+        store.dispatch(AuthMessageAction("Неизвестная ошибка", ""));
       }
 
     } else if (action is RegRequestAction) {
@@ -64,25 +61,19 @@ Middleware<AppState> userMiddleware() {
         );
 
         if (response.statusCode == 200) {
-          store.dispatch(RegFailureAction(""));
-          store.dispatch(RegSuccessAction("Вы успешно зарегестрировались. Вернитесь на экран авторизации."));
+          store.dispatch(RegMessageAction("", "Вы успешно зарегестрировались. Вернитесь на экран авторизации."));
         } else if (response.statusCode == 401) {
           final errorMessage = json.decode(response.body);
-          store.dispatch(RegSuccessAction(""));
           if (errorMessage == "UserAlreadyExist") {
-            store.dispatch(RegFailureAction("Такой пользователь уже существует"));
+            store.dispatch(RegMessageAction("Такой пользователь уже существует", ""));
           } else if (errorMessage == "EmailAlreadyExist") {
-            store.dispatch(RegFailureAction("Почта занята"));
-          } else {
-            store.dispatch(RegFailureAction("Неизвестная ошибка"));
+            store.dispatch(RegMessageAction("Почта занята", ""));
           }
         } else {
-          store.dispatch(RegSuccessAction(""));
-          store.dispatch(RegFailureAction("Неизвестная ошибка"));
+          store.dispatch(RegMessageAction("Неизвестная ошибка", ""));
         }
       } catch (error) {
-        store.dispatch(RegSuccessAction(""));
-        store.dispatch(RegFailureAction("Неизвестная ошибка"));
+        store.dispatch(RegMessageAction("Неизвестная ошибка", ""));
       }
 
     } else if (action is ChangePasswordAction) {
@@ -100,6 +91,8 @@ Middleware<AppState> userMiddleware() {
             Uri.parse('http://localhost:8080/backend-1.0-SNAPSHOT/api/users/change_password'),
             headers: {
               'Content-Type': 'application/json;charset=utf-8',
+              'token' : store.state.authToken,
+              'login' : store.state.username
             },
             body: jsonEncode(requestBody),
           );
@@ -111,7 +104,7 @@ Middleware<AppState> userMiddleware() {
             if (errorMessage == "IncorrectPassword") {
               store.dispatch(ChangePasswordMessageAction("Текущий пароль введён неверно", ""));
             } else {
-              store.dispatch(ChangePasswordMessageAction("Неизвестная ошибка", ""));
+              store.dispatch(LogoutAction());
             }
           } else {
             store.dispatch(ChangePasswordMessageAction("Неизвестная ошибка", ""));

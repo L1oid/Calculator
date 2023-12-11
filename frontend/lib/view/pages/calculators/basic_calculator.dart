@@ -9,8 +9,9 @@ class BasicCalculatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<AppState>(
-      builder: (context, store) {
+    return StoreConnector<AppState, String>(
+      converter: (store) => store.state.expression,
+      builder: (context, expression) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Калькулятор'),
@@ -23,7 +24,7 @@ class BasicCalculatorScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    store.state.expression,
+                    expression,
                     style: const TextStyle(fontSize: 24.0),
                   ),
                 ),

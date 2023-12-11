@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import '/state/state.dart';
 import '/state/actions.dart';
-import '/view/widgets/drawer.dart';
-import 'registration.dart';
-import 'account.dart';
+import '/view/pages/account/registration.dart';
+import '/view/pages/account/account.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<AppState>(
-      builder: (context, store) {
+    return StoreConnector<AppState, ViewModel>(
+      converter: (Store<AppState> store) => ViewModel.fromStore(store),
+      builder: (context, vm) {
         final TextEditingController usernameController = TextEditingController();
         final TextEditingController passwordController = TextEditingController();
 
-
-        if (store.state.authToken != '') {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const AccountScreen()),
-            );
-          });
-          return const SizedBox.shrink();
-        } else {
+        if (vm.authToken == '') {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Вход'),
             ),
-            drawer: const AppDrawer(),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -54,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                     onPressed: () {
                       final username = usernameController.text;
                       final password = passwordController.text;
-                      store.dispatch(AuthRequestAction(username, password));
+                      vm.authRequest(username, password);
 
                     },
                     child: const Text('Войти'),
@@ -70,15 +62,43 @@ class LoginScreen extends StatelessWidget {
                     child: const Text('Регистрация'),
                   ),
                   Text(
-                    store.state.authError,
+                    vm.authError,
                     style: const TextStyle(fontSize: 16.0, color: Colors.red),
                   ),
                 ],
               ),
             ),
           );
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const AccountScreen()),
+            );
+          });
+          return const SizedBox.shrink();
         }
       },
+    );
+  }
+}
+
+class ViewModel {
+  final String authToken;
+  final String authError;
+  final void Function(String username, String password) authRequest;
+  ViewModel({
+    required this.authToken,
+    required this.authError,
+    required this.authRequest
+
+  });
+
+  static fromStore(Store<AppState> store) {
+    return ViewModel(
+        authToken: store.state.authToken,
+        authError: store.state.authError,
+        authRequest: (String username, String password) => store.dispatch(
+            AuthRequestAction(username, password))
     );
   }
 }

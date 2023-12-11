@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:frontend/view/pages/chat/chat.dart';
-import '../../state/actions.dart';
+import 'package:redux/redux.dart';
+import '/state/actions.dart';
 import '/state/state.dart';
-import '../pages/account/login.dart';
-import '../pages/calculators/basic_calculator.dart';
-import '../pages/calculators/slae_calculator.dart';
+import '/view/pages/account/login.dart';
+import '/view/pages/calculators/basic_calculator.dart';
+import '/view/pages/calculators/slae_calculator.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<AppState>(
-        builder: (context, store) {
+    return StoreConnector<AppState, ViewModel>(
+        converter: (Store<AppState> store) => ViewModel.fromStore(store),
+        builder: (context, vm) {
           return Drawer(
             child: Builder(
               builder: (context) => ListView(
@@ -32,7 +34,7 @@ class AppDrawer extends StatelessWidget {
                     ),
                   ),
                   ListTile(
-                    title: Text(store.state.authToken != '' ? 'Личный кабинет' : 'Войти'),
+                    title: Text(vm.authToken != '' ? 'Личный кабинет' : 'Войти'),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -51,32 +53,32 @@ class AppDrawer extends StatelessWidget {
                   ),
                   ListTile(
                     title: const Text('СЛАУ калькулятор'),
-                    onTap: store.state.authToken != '' ? () {
+                    onTap: vm.authToken != '' ? () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const SlaeCalculatorScreen()),
                       );
                     } : null,
-                    enabled: store.state.authToken != '',
+                    enabled: vm.authToken != '',
                   ),
                   ListTile(
                     title: const Text('Чат'),
-                    onTap: store.state.authToken != '' ? () {
+                    onTap: vm.authToken != '' ? () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ChatScreen(login: store.state.username)),
+                        MaterialPageRoute(builder: (context) => const ChatScreen()),
                       );
                     } : null,
-                    enabled: store.state.authToken != '',
+                    enabled: vm.authToken != '',
                   ),
-                  if (store.state.authToken != '')
+                  if (vm.authToken != '')
                     ListTile(
                       title: const Text(
                         'Выйти',
                         style: TextStyle(color: Colors.red),
                       ),
                       onTap: () {
-                        store.dispatch(LogoutAction());
+                        vm.logout();
                       },
                     ),
                 ],
@@ -84,6 +86,22 @@ class AppDrawer extends StatelessWidget {
             ),
           );
         }
+    );
+  }
+}
+
+class ViewModel {
+  final String authToken;
+  final void Function() logout;
+  ViewModel({
+    required this.authToken,
+    required this.logout
+  });
+
+  static fromStore(Store<AppState> store) {
+    return ViewModel(
+        authToken: store.state.authToken,
+        logout: () => store.dispatch(LogoutAction())
     );
   }
 }

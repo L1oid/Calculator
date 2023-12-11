@@ -17,6 +17,7 @@ import com.calculator.backend.application.auth.service.impl.dto.UserCheckResult;
 import com.calculator.backend.application.auth.service.api.Authorizable;
 import com.calculator.backend.application.auth.service.api.Tokenable;
 import com.calculator.backend.application.auth.service.status.UserStatus;
+import com.calculator.backend.infrastructure.interceptor.TokenRequired;
 import com.calculator.backend.infrastructure.builder.Built;
 import com.calculator.backend.infrastructure.controller.rest.user.dto.AuthenticationResult;
 
@@ -90,6 +91,7 @@ public class UserController {
     }
 
     @POST
+    @TokenRequired
     @Path("/change_password")
     @Consumes("application/json")
     @Produces("application/json")
