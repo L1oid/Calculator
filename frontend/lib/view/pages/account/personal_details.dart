@@ -14,12 +14,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       builder: (context, vm) {
 
         if (vm.authToken == '') {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-            );
-          });
-          return const SizedBox.shrink();
+          return const LoginScreen();
         } else {
           return Scaffold(
             appBar: AppBar(

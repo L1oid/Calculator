@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:frontend/view/pages/chat/chat.dart';
 import 'package:redux/redux.dart';
 import '/state/actions.dart';
 import '/state/state.dart';
-import '/view/pages/account/login.dart';
-import '/view/pages/calculators/basic_calculator.dart';
-import '/view/pages/calculators/slae_calculator.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -36,38 +32,26 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     title: Text(vm.authToken != '' ? 'Личный кабинет' : 'Войти'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      );
+                      Navigator.pushNamed(context, '/login_screen');
                     },
                   ),
                   ListTile(
                     title: const Text('Базовый калькулятор'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const BasicCalculatorScreen()),
-                      );
+                      Navigator.pushNamed(context, '/');
                     },
                   ),
                   ListTile(
                     title: const Text('СЛАУ калькулятор'),
                     onTap: vm.authToken != '' ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SlaeCalculatorScreen()),
-                      );
+                      Navigator.pushNamed(context, '/slae_calculator_screen');
                     } : null,
                     enabled: vm.authToken != '',
                   ),
                   ListTile(
                     title: const Text('Чат'),
                     onTap: vm.authToken != '' ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ChatScreen()),
-                      );
+                      Navigator.pushNamed(context, '/chat_screen');
                     } : null,
                     enabled: vm.authToken != '',
                   ),

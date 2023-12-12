@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import '/state/state.dart';
 import '/state/actions.dart';
-import '/view/pages/account/registration.dart';
 import '/view/pages/account/account.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -54,10 +53,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const RegistrationScreen()),
-                      );
+                      Navigator.pushNamed(context, '/registration_screen');
                     },
                     child: const Text('Регистрация'),
                   ),
@@ -70,12 +66,7 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const AccountScreen()),
-            );
-          });
-          return const SizedBox.shrink();
+          return const AccountScreen();
         }
       },
     );
