@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:frontend/state/actions.dart';
 import 'package:redux/redux.dart';
+import '/state/actions/calculator_actions.dart';
 import '/state/state.dart';
 
 class SlaeCalculatorScreen extends StatelessWidget {

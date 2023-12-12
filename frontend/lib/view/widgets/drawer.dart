@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import '/state/actions.dart';
+import '/state/actions/user_actions.dart';
 import '/state/state.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -32,7 +32,7 @@ class AppDrawer extends StatelessWidget {
                   ListTile(
                     title: Text(vm.authToken != '' ? 'Личный кабинет' : 'Войти'),
                     onTap: () {
-                      Navigator.pushNamed(context, '/login_screen');
+                      Navigator.pushNamed(context, '/account_screen');
                     },
                   ),
                   ListTile(

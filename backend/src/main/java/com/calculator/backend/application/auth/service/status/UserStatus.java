@@ -8,6 +8,7 @@ public enum UserStatus {
     INCORRECT_PASSWORD(5),
     SUCCESSFUL_AUTHENTICATION(6),
     SUCCESSFUL_CHANGE_PASSWORD(7),
+    SUCCESSFUL_DELETE_ACCOUNT(8),
     ERROR(0);
 
     private final int code;

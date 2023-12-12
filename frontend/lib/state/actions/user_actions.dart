@@ -1,38 +1,5 @@
-class ConnectWebSocketAction {}
-
-class ReceiveMessageAction {
-  final String message;
-
-  ReceiveMessageAction(this.message);
-}
-
-class SendMessageAction {
-  final String text;
-
-  SendMessageAction(this.text);
-}
-
-class CloseWebSocketAction {}
-
 class LogoutAction {}
-
-class ClearSymbolAction {}
-
-class ClearExpressionAction {}
-
-class CalculateAction {}
-
-class AddSymbolAction {
-  final String symbol;
-
-  AddSymbolAction(this.symbol);
-}
-
-class SlaeResultAction {
-  final List<List<double>> slaeMatrix;
-
-  SlaeResultAction(this.slaeMatrix);
-}
+class DeleteAccountAction {}
 
 class AuthRequestAction {
   final String username;

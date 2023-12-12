@@ -1,4 +1,4 @@
-import 'api/calculator_interface.dart';
+import '/domain/api/calculator_interface.dart';
 
 class SlaeCalculator implements SlaeCalculatorInterface {
   @override

@@ -7,4 +7,5 @@ public interface UserRepositable {
     UserCheckResult checkUser(String login, String password) throws Exception;
     UserStatus addUser(String login, String password, String email) throws Exception;
     UserStatus changePassword(String login, String password, String newPassword) throws Exception;
+    UserStatus deleteAccount(String login) throws Exception;
 }

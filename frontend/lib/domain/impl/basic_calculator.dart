@@ -1,4 +1,4 @@
-import 'api/calculator_interface.dart';
+import '/domain/api/calculator_interface.dart';
 
 class BasicCalculator implements BasicCalculatorInterface {
   @override
@@ -28,8 +28,6 @@ class BasicCalculator implements BasicCalculatorInterface {
     }
     return matches;
   }
-
-
 
   double evaluate(List<String> tokens) {
     final stack = <double>[];

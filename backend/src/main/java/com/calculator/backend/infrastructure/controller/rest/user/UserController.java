@@ -2,10 +2,7 @@ package com.calculator.backend.infrastructure.controller.rest.user;
 
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -95,7 +92,7 @@ public class UserController {
     @Path("/change_password")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response changePassword(String passwordJson) {
+    public Response changePassword(@HeaderParam("login") String login, @HeaderParam("token") String token, String passwordJson) {
         try {
             User user = jsonb.fromJson(passwordJson, User.class);
             UserStatus status = model.changePassword(user);
@@ -105,6 +102,29 @@ public class UserController {
                     return Response.ok(jsonb.toJson("SuccessChangePassword")).build();
                 case INCORRECT_PASSWORD:
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("IncorrectPassword")).build();
+                case USER_NOT_FOUND:
+                    return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
+                default:
+                    return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
+            }
+        } catch (JsonbException e) {
+            return handleJsonbException(e);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @DELETE
+    @TokenRequired
+    @Path("/delete")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response deleteAccount(@HeaderParam("login") String login, @HeaderParam("token") String token) {
+        try {
+            UserStatus status = model.deleteAccount(login);
+            switch (status) {
+                case SUCCESSFUL_DELETE_ACCOUNT:
+                    return Response.ok(jsonb.toJson("SuccessDeleteAccount")).build();
                 case USER_NOT_FOUND:
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("UserNotFound")).build();
                 default:

@@ -6,7 +6,6 @@ import '/view/pages/calculators/basic_calculator.dart';
 import '/view/pages/calculators/slae_calculator.dart';
 import '/view/pages/account/account.dart';
 import '/view/pages/account/change_password.dart';
-import '/view/pages/account/login.dart';
 import '/view/pages/account/personal_details.dart';
 import '/view/pages/account/registration.dart';
 import '/view/pages/chat/chat.dart';
@@ -27,11 +26,10 @@ class HomeScreen extends StatelessWidget {
           '/': (context) => const BasicCalculatorScreen(),
           '/slae_calculator_screen': (context) => const SlaeCalculatorScreen(),
           '/chat_screen': (context) => const ChatScreen(),
-          '/account_screen': (context) => const AccountScreen(),
           '/change_password_screen': (context) => const ChangePasswordScreen(),
-          '/login_screen': (context) => const LoginScreen(),
+          '/account_screen': (context) => const AccountScreen(),
           '/personal_details_screen': (context) => const PersonalDetailsScreen(),
-          '/registration_screen': (context) => const RegistrationScreen(),
+          '/registration_account_screen': (context) => const RegistrationScreen(),
         },
         theme: ThemeData(
           primarySwatch: Colors.blue,

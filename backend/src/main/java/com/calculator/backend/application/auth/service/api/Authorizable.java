@@ -8,6 +8,7 @@ public interface Authorizable {
     void injectRepository(UserRepositable repository);
     void injectToken(Tokenable useToken);
     UserStatus changePassword(User user) throws Exception;
+    UserStatus deleteAccount(String login) throws Exception;
     UserCheckResult checkUser(User user) throws Exception;
     UserStatus addUser(User user) throws Exception;
     String createToken(User user);

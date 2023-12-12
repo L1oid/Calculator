@@ -22,8 +22,14 @@ public class Auth implements Authorizable {
         this.useToken = useToken;
     }
 
+    @Override
     public UserStatus changePassword(User user) throws Exception {
         return repository.changePassword(user.getLogin(), user.getPassword(), user.getNewPassword());
+    }
+
+    @Override
+    public UserStatus deleteAccount(String login) throws Exception {
+        return repository.deleteAccount(login);
     }
 
     @Override

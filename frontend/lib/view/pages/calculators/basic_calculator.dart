@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import '/state/state.dart';
-import '/state/actions.dart';
+import '/state/actions/calculator_actions.dart';
 import '/view/widgets/drawer.dart';
 
 class BasicCalculatorScreen extends StatelessWidget {

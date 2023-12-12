@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import '/state/actions.dart';
+import '/state/actions/chat_actions.dart';
 import '/state/state.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -18,13 +18,10 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    store = StoreProvider.of<AppState>(context);
-    store.dispatch(ConnectWebSocketAction());
+    Future.delayed(Duration.zero, () {
+      store = StoreProvider.of<AppState>(context);
+      store.dispatch(ConnectWebSocketAction());
+    });
   }
 
   void sendMessage(String text) {

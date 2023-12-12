@@ -72,6 +72,35 @@ public class UserRepository implements UserRepositable {
     }
 
     @Override
+    public UserStatus deleteAccount(String login) throws Exception {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            try {
+
+                TypedQuery<EUser> query = entityManager.createQuery("SELECT u FROM EUser u WHERE u.login = :login", EUser.class);
+                List<EUser> users = query.setParameter("login", login).getResultList();
+
+                if (!users.isEmpty()) {
+                    EUser user = users.get(0);
+                    transaction.begin();
+                    entityManager.remove(user);
+                    transaction.commit();
+                    return UserStatus.SUCCESSFUL_DELETE_ACCOUNT;
+                } else {
+                    return UserStatus.USER_NOT_FOUND;
+                }
+            } catch (Exception ex) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+                logger.severe("Error while checking user: " + ex.getMessage());
+                return UserStatus.ERROR;
+            }
+        }
+    }
+
+    @Override
     public UserStatus addUser(String login, String password, String email) throws Exception {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             EntityTransaction transaction = entityManager.getTransaction();
