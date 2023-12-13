@@ -4,22 +4,35 @@ import 'package:redux/redux.dart';
 import '/state/actions/calculator_actions.dart';
 import '/state/state.dart';
 
-class SlaeCalculatorScreen extends StatelessWidget {
-  const SlaeCalculatorScreen({Key? key}) : super(key: key);
+class SlaeCalculatorScreen extends StatefulWidget {
+  const SlaeCalculatorScreen({super.key});
+
+  @override
+  SlaeCalculatorScreenState createState() => SlaeCalculatorScreenState();
+}
+
+class SlaeCalculatorScreenState extends State<SlaeCalculatorScreen> {
+  late List<List<TextEditingController>> controllers;
+  int dimension = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeControllers();
+  }
+
+  void initializeControllers() {
+    controllers = List.generate(
+      dimension,
+          (rowIndex) => List.generate(dimension + 1, (colIndex) => TextEditingController()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ViewModel>(
       converter: (Store<AppState> store) => ViewModel.fromStore(store),
       builder: (context, vm) {
-
-        late List<List<TextEditingController>> controllers;
-
-        controllers = List.generate(
-          3,
-              (rowIndex) => List.generate(4, (colIndex) => TextEditingController()),
-        );
-
         return Scaffold(
           appBar: AppBar(
             title: const Text('СЛАУ Калькулятор'),
@@ -30,38 +43,59 @@ class SlaeCalculatorScreen extends StatelessWidget {
               children: [
                 const Text("Метод Гаусса", style: TextStyle(fontSize: 24.0)),
                 const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (dimension > 2) {
+                          setState(() {
+                            dimension--;
+                            initializeControllers();
+                          });
+                        }
+                      },
+                      child: const Text('-'),
+                    ),
+                    const SizedBox(width: 8.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (dimension < 6) {
+                          setState(() {
+                            dimension++;
+                            initializeControllers();
+                          });
+                        }
+                      },
+                      child: const Text('+'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
                 Column(
                   children: List.generate(
-                    3,
+                    dimension,
                         (rowIndex) => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
-                        4,
+                        dimension + 1,
                             (colIndex) {
-                          if (colIndex < (4 - 2)) {
+                          if (colIndex < ((dimension + 1) - 2)) {
                             return Row(
                               children: [
-                                buildTextField(rowIndex, colIndex, controllers),
-                                const SizedBox(width: 8.0),
-                                Text("x${colIndex + 1}", style: const TextStyle(fontSize: 24.0)),
-                                const SizedBox(width: 8.0),
-                                const Text("+", style: TextStyle(fontSize: 24.0)),
-                                const SizedBox(width: 8.0)
+                                buildTextField(rowIndex, colIndex, dimension, controllers),
+                                const Text("+", style: TextStyle(fontSize: 16.0)),
                               ],
                             );
-                          } else if (colIndex == (4 - 2)) {
+                          } else if (colIndex == ((dimension + 1) - 2)) {
                             return Row(
                               children: [
-                                buildTextField(rowIndex, colIndex, controllers),
-                                const SizedBox(width: 8.0),
-                                Text("x${colIndex + 1}", style: const TextStyle(fontSize: 24.0)),
-                                const SizedBox(width: 8.0),
-                                const Text("=", style: TextStyle(fontSize: 24.0)),
-                                const SizedBox(width: 8.0)
+                                buildTextField(rowIndex, colIndex, dimension, controllers),
+                                const Text("=", style: TextStyle(fontSize: 16.0)),
                               ],
                             );
                           } else {
-                            return buildTextField(rowIndex, colIndex, controllers);
+                            return buildTextField(rowIndex, colIndex, dimension, controllers);
                           }
                         },
                       ),
@@ -98,14 +132,19 @@ class SlaeCalculatorScreen extends StatelessWidget {
     );
   }
 
-  Widget buildTextField(int rowIndex, int colIndex, List<List<TextEditingController>> controllers) {
-    return SizedBox(
-      width: 50,
-      child: TextField(
-        controller: controllers[rowIndex][colIndex],
-        keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
+  Widget buildTextField(int rowIndex, int colIndex, int dimension, List<List<TextEditingController>> controllers) {
+    return Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: SizedBox(
+        width: 45,
+        height: 45,
+        child: TextField(
+          controller: controllers[rowIndex][colIndex],
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: colIndex == ((dimension + 1) - 1) ? null : 'x${colIndex + 1}',
+          ),
         ),
       ),
     );
