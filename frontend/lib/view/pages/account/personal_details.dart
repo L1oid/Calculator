@@ -17,7 +17,7 @@ class PersonalDetailsScreen extends StatelessWidget {
 
     if (pickedFile != null) {
       final Uint8List imageBytes = await pickedFile.readAsBytes();
-      StoreProvider.of<AppState>(context).dispatch(UploadUserDataAction(imageBytes));
+      StoreProvider.of<AppState>(context).dispatch(UploadUserAvatarAction(imageBytes));
     }
   }
 
@@ -41,16 +41,36 @@ class PersonalDetailsScreen extends StatelessWidget {
                   InkWell(
                     onTap: () => pickImage(vm, context),
                     child: CircleAvatar(
-                      radius: 145.0,
-                      backgroundImage: vm.avatarImage != null
-                          ? Image.memory(vm.avatarImage!).image
-                          : const AssetImage("default.jpg"),
+                      radius: 100.0,
+                      child: ClipOval(
+                        child: SizedBox(
+                          width: 200.0,
+                          height: 200.0,
+                          child: vm.avatarImage != null
+                              ? Image.memory(vm.avatarImage!, fit: BoxFit.cover)
+                              : Image.asset("default.jpg", fit: BoxFit.cover),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  Text("Имя пользователя: ${vm.username}", style: const TextStyle(fontSize: 24.0)),
+                  TextFormField(
+                    readOnly: true,
+                    initialValue: vm.username,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Имя пользователя",
+                    ),
+                  ),
                   const SizedBox(height: 16.0),
-                  Text("Почта: ${vm.email}", style: const TextStyle(fontSize: 24.0)),
+                  TextFormField(
+                    readOnly: true,
+                    initialValue: vm.email,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Почта",
+                    ),
+                  ),
                 ],
               ),
             ),

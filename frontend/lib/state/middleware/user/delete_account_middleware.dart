@@ -22,7 +22,7 @@ Middleware<AppState> deleteAccount() {
         store.dispatch(LogoutAction());
       } else {
         store.dispatch(LogoutAction());
-        store.dispatch(AuthMessageAction("Ошибка авторизации", ""));
+        store.dispatch(AuthMessageAction("Ошибка авторизации"));
       }
     }
     next(action);

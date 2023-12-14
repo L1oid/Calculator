@@ -33,6 +33,7 @@ class RegistrationScreen extends StatelessWidget {
                     TextField(
                       controller: usernameController,
                       decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: 'Логин',
                       ),
                     ),
@@ -41,6 +42,7 @@ class RegistrationScreen extends StatelessWidget {
                       controller: passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: 'Пароль',
                       ),
                     ),
@@ -48,6 +50,7 @@ class RegistrationScreen extends StatelessWidget {
                     TextField(
                       controller: emailController,
                       decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                         labelText: 'Почта',
                       ),
                     ),

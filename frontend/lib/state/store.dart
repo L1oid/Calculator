@@ -6,12 +6,12 @@ import '/state/middleware/user/delete_account_middleware.dart';
 import '/state/middleware/user/authenticate_middleware.dart';
 import '/state/middleware/user/registration_middleware.dart';
 import '/state/middleware/user/change_password_middleware.dart';
-import '/state/middleware/user/upload_user_data_middleware.dart';
+import '/state/middleware/user/upload_user_avatar_middleware.dart';
 
 Store<AppState> createStore() {
   return Store(
     appReducer,
     initialState: AppState('', '', '', '', '', '', '', '', '', '', [], null),
-    middleware: [chat(), deleteAccount(), authenticate(), registration(), changePassword(), uploadUserData()]
+    middleware: [chat(), deleteAccount(), authenticate(), registration(), changePassword(), uploadUserAvatar()]
   );
 }

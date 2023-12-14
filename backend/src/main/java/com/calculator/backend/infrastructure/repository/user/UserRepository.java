@@ -25,16 +25,17 @@ public class UserRepository implements UserRepositable {
             if (!users.isEmpty()) {
                 if (users.get(0).getPassword().equals(password)) {
                     String email = users.get(0).getEmail();
-                    return new UserCheckResult(UserStatus.SUCCESSFUL_AUTHENTICATION, email);
+                    String avatar = users.get(0).getAvatar();
+                    return new UserCheckResult(UserStatus.SUCCESSFUL_AUTHENTICATION, email, avatar);
                 } else {
-                    return new UserCheckResult(UserStatus.INCORRECT_PASSWORD, null);
+                    return new UserCheckResult(UserStatus.INCORRECT_PASSWORD, null, null);
                 }
             } else {
-                return new UserCheckResult(UserStatus.USER_NOT_FOUND, null);
+                return new UserCheckResult(UserStatus.USER_NOT_FOUND, null, null);
             }
         } catch (Exception ex) {
             logger.severe("Error while checking user: " + ex.getMessage());
-            return new UserCheckResult(UserStatus.ERROR, null);
+            return new UserCheckResult(UserStatus.ERROR, null, null);
         }
     }
 
@@ -116,14 +117,14 @@ public class UserRepository implements UserRepositable {
                     transaction.commit();
                     return avatar;
                 } else {
-                    return "";
+                    return null;
                 }
             } catch (Exception ex) {
                 if (transaction != null && transaction.isActive()) {
                     transaction.rollback();
                 }
                 logger.severe("Error while checking user: " + ex.getMessage());
-                return "";
+                return null;
             }
         }
     }

@@ -24,19 +24,25 @@ Middleware<AppState> authenticate() {
         final data = json.decode(response.body);
         final token = data['token'];
         final email = data['email'];
+        final avatar = base64Decode(data['avatar']);
 
-        store.dispatch(AuthMessageAction("", token));
+        store.dispatch(TokenSaveAction(token));
         store.dispatch(UsernameSaveAction(action.username));
         store.dispatch(EmailSaveAction(email));
+        if (avatar.isEmpty) {
+          store.dispatch(AvatarSaveAction(null));
+        } else {
+          store.dispatch(AvatarSaveAction(avatar));
+        }
       } else if (response.statusCode == 401) {
         final errorMessage = json.decode(response.body);
         if (errorMessage == "UserNotFound") {
-          store.dispatch(AuthMessageAction("Такого пользователя не существует", ""));
+          store.dispatch(AuthMessageAction("Такого пользователя не существует"));
         } else if (errorMessage == "IncorrectPassword") {
-          store.dispatch(AuthMessageAction("Неверный пароль", ""));
+          store.dispatch(AuthMessageAction("Неверный пароль"));
         }
       } else {
-        store.dispatch(AuthMessageAction("Неизвестная ошибка", ""));
+        store.dispatch(AuthMessageAction("Неизвестная ошибка"));
       }
     }
     next(action);

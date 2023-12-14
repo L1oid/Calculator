@@ -15,53 +15,61 @@ class LoginScreen extends StatelessWidget {
         final TextEditingController usernameController = TextEditingController();
         final TextEditingController passwordController = TextEditingController();
 
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Вход'),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Логин',
-                  ),
+        return WillPopScope(
+            onWillPop: () async {
+              vm.authMessage("");
+              return true;
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('Вход'),
+              ),
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextField(
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Логин',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Пароль',
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () {
+                        final username = usernameController.text;
+                        final password = passwordController.text;
+                        vm.authRequest(username, password);
+                      },
+                      child: const Text('Войти'),
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      onPressed: () {
+                        vm.authMessage("");
+                        Navigator.pushNamed(context, '/registration_account_screen');
+                      },
+                      child: const Text('Регистрация'),
+                    ),
+                    Text(
+                      vm.authError,
+                      style: const TextStyle(fontSize: 16.0, color: Colors.red),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Пароль',
-                  ),
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () {
-                    final username = usernameController.text;
-                    final password = passwordController.text;
-                    vm.authRequest(username, password);
-
-                  },
-                  child: const Text('Войти'),
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/registration_account_screen');
-                  },
-                  child: const Text('Регистрация'),
-                ),
-                Text(
-                  vm.authError,
-                  style: const TextStyle(fontSize: 16.0, color: Colors.red),
-                ),
-              ],
+              ),
             ),
-          ),
         );
       },
     );
@@ -69,22 +77,23 @@ class LoginScreen extends StatelessWidget {
 }
 
 class ViewModel {
-  final String authToken;
   final String authError;
   final void Function(String username, String password) authRequest;
+  final void Function(String authError) authMessage;
   ViewModel({
-    required this.authToken,
     required this.authError,
-    required this.authRequest
+    required this.authRequest,
+    required this.authMessage
 
   });
 
   static fromStore(Store<AppState> store) {
     return ViewModel(
-        authToken: store.state.authToken,
         authError: store.state.authError,
         authRequest: (String username, String password) => store.dispatch(
-            AuthRequestAction(username, password))
+            AuthRequestAction(username, password)),
+        authMessage: (String authError) => store.dispatch(
+            AuthMessageAction(authError))
     );
   }
 }

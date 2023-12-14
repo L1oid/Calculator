@@ -3,16 +3,16 @@ import 'dart:typed_data';
 class LogoutAction {}
 class DeleteAccountAction {}
 
-class UploadUserDataAction {
+class UploadUserAvatarAction {
   final Uint8List? avatarImage;
 
-  UploadUserDataAction(this.avatarImage);
+  UploadUserAvatarAction(this.avatarImage);
 }
 
-class AddStoreUserDataAction {
+class AvatarSaveAction {
   final Uint8List? avatarImage;
 
-  AddStoreUserDataAction(this.avatarImage);
+  AvatarSaveAction(this.avatarImage);
 }
 
 class AuthRequestAction {
@@ -67,9 +67,14 @@ class RegMessageAction {
   RegMessageAction(this.regError, this.regSuccess);
 }
 
-class AuthMessageAction {
-  final String authError;
+class TokenSaveAction {
   final String token;
 
-  AuthMessageAction(this.authError, this.token);
+  TokenSaveAction(this.token);
+}
+
+class AuthMessageAction {
+  final String authError;
+
+  AuthMessageAction(this.authError);
 }

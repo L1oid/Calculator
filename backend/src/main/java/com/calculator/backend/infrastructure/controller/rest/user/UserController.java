@@ -48,7 +48,8 @@ public class UserController {
                 case SUCCESSFUL_AUTHENTICATION:
                     String token = tokenable.createToken(user);
                     String email = result.getEmail();
-                    authenticationResult = new AuthenticationResult(token, email);
+                    String avatar = result.getAvatar();
+                    authenticationResult = new AuthenticationResult(token, email, avatar);
                     return Response.ok(jsonb.toJson(authenticationResult)).build();
                 case INCORRECT_PASSWORD:
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("IncorrectPassword")).build();
@@ -142,21 +143,18 @@ public class UserController {
 
     @POST
     @TokenRequired
-    @Path("/upload_user_data")
-    @Consumes("application/x-www-form-urlencoded")
-    @Produces("application/octet-stream")
-    public Response uploadUserData(@HeaderParam("login") String login, @HeaderParam("token") String token, @FormParam("file") String avatar) {
+    @Path("/upload_user_avatar")
+    @Consumes("application/json;charset=utf-8")
+    @Produces("application/json;charset=utf-8")
+    public Response uploadUserData(@HeaderParam("login") String login, @HeaderParam("token") String token, String avatar) {
         try {
-            String avatar2 = model.uploadAvatar(login, avatar);
-            byte[] fileBytes = Base64.getDecoder().decode(avatar2);
-            StreamingOutput stream = output -> {
-                try (OutputStream os = output) {
-                    os.write(fileBytes);
-                }
-            };
-            return Response.ok(stream)
-                    .header("Content-Disposition", "attachment; filename=avatar")
-                    .build();
+            User user = jsonb.fromJson(avatar, User.class);
+            String newAvatar = model.uploadAvatar(login, user.getAvatar());
+            if (newAvatar != null) {
+                return Response.ok(newAvatar).build();
+            } else {
+                return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
+            }
         } catch (JsonbException e) {
             return handleJsonbException(e);
         } catch (Exception e) {

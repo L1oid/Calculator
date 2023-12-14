@@ -9,6 +9,7 @@
         <set>
           <option value="login" />
           <option value="token" />
+          <option value="avatar" />
         </set>
       </option>
     </inspection_tool>

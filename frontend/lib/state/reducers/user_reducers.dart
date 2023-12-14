@@ -3,7 +3,7 @@ import '/state/actions/user_actions.dart';
 
 
 Uint8List? avatarImageReducer(Uint8List? avatarImage, dynamic action) {
-  if (action is AddStoreUserDataAction) {
+  if (action is AvatarSaveAction) {
     return action.avatarImage;
   } else if (action is LogoutAction) {
     avatarImage = null;
@@ -48,7 +48,7 @@ String emailReducer(String email, dynamic action) {
 }
 
 String authTokenReducer(String authToken, dynamic action) {
-  if (action is AuthMessageAction) {
+  if (action is TokenSaveAction) {
     return action.token;
   } else if (action is LogoutAction) {
     authToken = "";

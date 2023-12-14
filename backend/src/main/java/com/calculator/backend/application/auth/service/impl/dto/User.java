@@ -5,6 +5,7 @@ public class User {
     private String password;
     private String newPassword;
     private String email;
+    private String avatar;
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
@@ -36,5 +37,13 @@ public class User {
 
     public void setLogin(String Login) {
         this.login = Login;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

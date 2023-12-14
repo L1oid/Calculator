@@ -41,19 +41,28 @@ class ChangePasswordScreen extends StatelessWidget {
                     TextField(
                       controller: currentPasswordController,
                       obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Текущий пароль'),
+                      decoration: const InputDecoration(
+                          labelText: 'Текущий пароль',
+                          border: OutlineInputBorder()
+                      ),
                     ),
                     const SizedBox(height: 16.0),
                     TextField(
                       controller: newPasswordController,
                       obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Новый пароль'),
+                      decoration: const InputDecoration(
+                          labelText: 'Новый пароль',
+                          border: OutlineInputBorder()
+                      ),
                     ),
                     const SizedBox(height: 16.0),
                     TextField(
                       controller: repeatPasswordController,
                       obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Повторите новый пароль'),
+                      decoration: const InputDecoration(
+                          labelText: 'Повторите новый пароль',
+                          border: OutlineInputBorder()
+                      ),
                     ),
                     const SizedBox(height: 16.0),
                     ElevatedButton(

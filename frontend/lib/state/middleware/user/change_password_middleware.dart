@@ -34,7 +34,7 @@ Middleware<AppState> changePassword() {
             store.dispatch(ChangePasswordMessageAction("Текущий пароль введён неверно", ""));
           } else {
             store.dispatch(LogoutAction());
-            store.dispatch(AuthMessageAction("Ошибка авторизации", ""));
+            store.dispatch(AuthMessageAction("Ошибка авторизации"));
           }
         } else {
           store.dispatch(ChangePasswordMessageAction("Неизвестная ошибка", ""));

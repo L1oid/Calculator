@@ -15,7 +15,7 @@ Middleware<AppState> chat() {
       });
     } else if (action is SendMessageAction) {
       Map<String, String> message = {'text': action.text};
-      channel!.sink.add(jsonEncode(message));
+      channel?.sink.add(jsonEncode(message));
     } else if (action is CloseWebSocketAction) {
       channel?.sink.close();
     }
