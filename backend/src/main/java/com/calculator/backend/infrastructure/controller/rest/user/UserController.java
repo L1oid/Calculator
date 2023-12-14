@@ -1,5 +1,7 @@
 package com.calculator.backend.infrastructure.controller.rest.user;
 
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.logging.Logger;
 
 import jakarta.ws.rs.*;
@@ -17,6 +19,7 @@ import com.calculator.backend.application.auth.service.status.UserStatus;
 import com.calculator.backend.infrastructure.interceptor.TokenRequired;
 import com.calculator.backend.infrastructure.builder.Built;
 import com.calculator.backend.infrastructure.controller.rest.user.dto.AuthenticationResult;
+import jakarta.ws.rs.core.StreamingOutput;
 
 @Path("/users")
 public class UserController {
@@ -130,6 +133,30 @@ public class UserController {
                 default:
                     return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(jsonb.toJson("Unavailable DataBase Connection")).build();
             }
+        } catch (JsonbException e) {
+            return handleJsonbException(e);
+        } catch (Exception e) {
+            return handleException(e);
+        }
+    }
+
+    @POST
+    @TokenRequired
+    @Path("/upload_user_data")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/octet-stream")
+    public Response uploadUserData(@HeaderParam("login") String login, @HeaderParam("token") String token, @FormParam("file") String avatar) {
+        try {
+            String avatar2 = model.uploadAvatar(login, avatar);
+            byte[] fileBytes = Base64.getDecoder().decode(avatar2);
+            StreamingOutput stream = output -> {
+                try (OutputStream os = output) {
+                    os.write(fileBytes);
+                }
+            };
+            return Response.ok(stream)
+                    .header("Content-Disposition", "attachment; filename=avatar")
+                    .build();
         } catch (JsonbException e) {
             return handleJsonbException(e);
         } catch (Exception e) {

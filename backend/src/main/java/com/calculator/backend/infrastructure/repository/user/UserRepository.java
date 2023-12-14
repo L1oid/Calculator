@@ -101,6 +101,34 @@ public class UserRepository implements UserRepositable {
     }
 
     @Override
+    public String uploadAvatar(String login, String avatar) throws Exception {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            EntityTransaction transaction = entityManager.getTransaction();
+
+            try {
+                TypedQuery<EUser> query = entityManager.createQuery("SELECT u FROM EUser u WHERE u.login = :login", EUser.class);
+                List<EUser> users = query.setParameter("login", login).getResultList();
+
+                if (!users.isEmpty()) {
+                    EUser user = users.get(0);
+                    transaction.begin();
+                    user.setAvatar(avatar);
+                    transaction.commit();
+                    return avatar;
+                } else {
+                    return "";
+                }
+            } catch (Exception ex) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();
+                }
+                logger.severe("Error while checking user: " + ex.getMessage());
+                return "";
+            }
+        }
+    }
+
+    @Override
     public UserStatus addUser(String login, String password, String email) throws Exception {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             EntityTransaction transaction = entityManager.getTransaction();
@@ -122,7 +150,7 @@ public class UserRepository implements UserRepositable {
                     return UserStatus.EMAIL_ALREADY_EXISTS;
                 }
 
-                EUser newUser = new EUser(login, password, email);
+                EUser newUser = new EUser(login, password, email, "");
                 entityManager.persist(newUser);
                 transaction.commit();
 

@@ -1,4 +1,15 @@
+import 'dart:typed_data';
 import '/state/actions/user_actions.dart';
+
+
+Uint8List? avatarImageReducer(Uint8List? avatarImage, dynamic action) {
+  if (action is AddStoreUserDataAction) {
+    return action.avatarImage;
+  } else if (action is LogoutAction) {
+    avatarImage = null;
+  }
+  return avatarImage;
+}
 
 String errorChangePasswordReducer(String errorChangePassword, dynamic action) {
   if (action is ChangePasswordMessageAction) {

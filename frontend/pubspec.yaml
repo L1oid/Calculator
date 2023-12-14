@@ -34,6 +34,7 @@ dependencies:
   flutter_redux: ^0.10.0
   http: ^0.13.3
   web_socket_channel: ^2.4.0
+  image_picker: ^1.0.5
 
 
 
@@ -62,6 +63,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/default.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -15,6 +15,7 @@ AppState appReducer(AppState state, dynamic action) {
     emailReducer(state.email, action),
     errorChangePasswordReducer(state.errorChangePassword, action),
     successChangePasswordReducer(state.successChangePassword, action),
-    sendChatMessageReducer(state.messages, action)
+    sendChatMessageReducer(state.messages, action),
+    avatarImageReducer(state.avatarImage, action)
   );
 }

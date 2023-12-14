@@ -1,5 +1,19 @@
+import 'dart:typed_data';
+
 class LogoutAction {}
 class DeleteAccountAction {}
+
+class UploadUserDataAction {
+  final Uint8List? avatarImage;
+
+  UploadUserDataAction(this.avatarImage);
+}
+
+class AddStoreUserDataAction {
+  final Uint8List? avatarImage;
+
+  AddStoreUserDataAction(this.avatarImage);
+}
 
 class AuthRequestAction {
   final String username;

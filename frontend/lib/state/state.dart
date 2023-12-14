@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class AppState {
   final String expression;
   final String slaeResult;
@@ -15,6 +17,7 @@ class AppState {
   final String regSuccess;
 
   final List<Map<String, String>> messages;
+  final Uint8List? avatarImage;
 
   AppState(this.expression,
       this.authToken,
@@ -26,5 +29,6 @@ class AppState {
       this.email,
       this.successChangePassword,
       this.errorChangePassword,
-      this.messages);
+      this.messages,
+      this.avatarImage);
 }

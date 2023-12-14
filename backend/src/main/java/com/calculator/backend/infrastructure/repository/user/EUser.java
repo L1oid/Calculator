@@ -20,12 +20,16 @@ public class EUser implements Serializable {
     @Column(name = "\"email\"")
     private String email;
 
+    @Column(name = "\"avatar\"")
+    private String avatar;
+
     protected EUser() {}
     
-    public EUser(String login, String password, String email) {
+    public EUser(String login, String password, String email, String avatar) {
         this.login = login;
         this.email = email;
         this.password = password;
+        this.avatar = avatar;
     }
     
     public int getId() {
@@ -58,5 +62,11 @@ public class EUser implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String getAvatar() {
+        return avatar;
+    }
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
