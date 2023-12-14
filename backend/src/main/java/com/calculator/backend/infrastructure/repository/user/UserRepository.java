@@ -25,7 +25,7 @@ public class UserRepository implements UserRepositable {
             if (!users.isEmpty()) {
                 if (users.get(0).getPassword().equals(password)) {
                     String email = users.get(0).getEmail();
-                    String avatar = users.get(0).getAvatar();
+                    byte[] avatar = users.get(0).getAvatar();
                     return new UserCheckResult(UserStatus.SUCCESSFUL_AUTHENTICATION, email, avatar);
                 } else {
                     return new UserCheckResult(UserStatus.INCORRECT_PASSWORD, null, null);
@@ -102,7 +102,7 @@ public class UserRepository implements UserRepositable {
     }
 
     @Override
-    public String uploadAvatar(String login, String avatar) throws Exception {
+    public byte[] uploadAvatar(String login, byte[] avatar) throws Exception {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             EntityTransaction transaction = entityManager.getTransaction();
 
@@ -151,7 +151,7 @@ public class UserRepository implements UserRepositable {
                     return UserStatus.EMAIL_ALREADY_EXISTS;
                 }
 
-                EUser newUser = new EUser(login, password, email, "");
+                EUser newUser = new EUser(login, password, email, null);
                 entityManager.persist(newUser);
                 transaction.commit();
 

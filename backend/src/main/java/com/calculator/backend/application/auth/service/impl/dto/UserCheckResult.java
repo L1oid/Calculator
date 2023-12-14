@@ -5,9 +5,9 @@ import com.calculator.backend.application.auth.service.status.UserStatus;
 public class UserCheckResult {
     private final UserStatus status;
     private final String email;
-    private final String avatar;
+    private final byte[] avatar;
 
-    public UserCheckResult(UserStatus status, String email, String avatar) {
+    public UserCheckResult(UserStatus status, String email, byte[] avatar) {
         this.status = status;
         this.email = email;
         this.avatar = avatar;
@@ -21,7 +21,7 @@ public class UserCheckResult {
         return email;
     }
 
-    public String getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 }

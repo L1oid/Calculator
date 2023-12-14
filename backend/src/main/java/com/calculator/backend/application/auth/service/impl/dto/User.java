@@ -5,7 +5,7 @@ public class User {
     private String password;
     private String newPassword;
     private String email;
-    private String avatar;
+    private byte[] avatar;
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
@@ -39,11 +39,11 @@ public class User {
         this.login = Login;
     }
 
-    public String getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 }

@@ -21,11 +21,11 @@ public class EUser implements Serializable {
     private String email;
 
     @Column(name = "\"avatar\"")
-    private String avatar;
+    private byte[] avatar;
 
     protected EUser() {}
     
-    public EUser(String login, String password, String email, String avatar) {
+    public EUser(String login, String password, String email, byte[] avatar) {
         this.login = login;
         this.email = email;
         this.password = password;
@@ -63,10 +63,10 @@ public class EUser implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getAvatar() {
+    public byte[] getAvatar() {
         return avatar;
     }
-    public void setAvatar(String avatar) {
+    public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
 }

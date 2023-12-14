@@ -48,8 +48,13 @@ public class UserController {
                 case SUCCESSFUL_AUTHENTICATION:
                     String token = tokenable.createToken(user);
                     String email = result.getEmail();
-                    String avatar = result.getAvatar();
-                    authenticationResult = new AuthenticationResult(token, email, avatar);
+                    byte[] avatar = result.getAvatar();
+                    if (avatar == null) {
+                        authenticationResult = new AuthenticationResult(token, email, null);
+                    } else {
+                        String base64Avatar = Base64.getEncoder().encodeToString(result.getAvatar());
+                        authenticationResult = new AuthenticationResult(token, email, base64Avatar);
+                    }
                     return Response.ok(jsonb.toJson(authenticationResult)).build();
                 case INCORRECT_PASSWORD:
                     return Response.status(Response.Status.UNAUTHORIZED).entity(jsonb.toJson("IncorrectPassword")).build();
@@ -144,12 +149,11 @@ public class UserController {
     @POST
     @TokenRequired
     @Path("/upload_user_avatar")
-    @Consumes("application/json;charset=utf-8")
-    @Produces("application/json;charset=utf-8")
-    public Response uploadUserData(@HeaderParam("login") String login, @HeaderParam("token") String token, String avatar) {
+    @Consumes("application/octet-stream")
+    @Produces("application/octet-stream")
+    public Response uploadUserData(@HeaderParam("login") String login, @HeaderParam("token") String token, byte[] avatar) {
         try {
-            User user = jsonb.fromJson(avatar, User.class);
-            String newAvatar = model.uploadAvatar(login, user.getAvatar());
+            byte[] newAvatar = model.uploadAvatar(login, avatar);
             if (newAvatar != null) {
                 return Response.ok(newAvatar).build();
             } else {

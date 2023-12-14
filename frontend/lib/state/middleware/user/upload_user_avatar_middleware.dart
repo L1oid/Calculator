@@ -10,15 +10,15 @@ Middleware<AppState> uploadUserAvatar() {
       final response = await http.post(
         Uri.parse('http://localhost:8080/backend-1.0-SNAPSHOT/api/users/upload_user_avatar'),
         headers: {
-          'Content-Type': 'application/json;charset=utf-8',
+          'Content-Type': 'application/octet-stream',
           'login' : store.state.username,
           'token' : store.state.authToken
         },
-        body: jsonEncode({'avatar': base64Encode(action.avatarImage as List<int>)})
+        body: action.avatarImage,
       );
 
       if (response.statusCode == 200) {
-        store.dispatch(AvatarSaveAction(base64Decode(response.body)));
+        store.dispatch(AvatarSaveAction(response.bodyBytes));
       } else if (response.statusCode == 401) {
         store.dispatch(LogoutAction());
         store.dispatch(AuthMessageAction("Ошибка авторизации"));

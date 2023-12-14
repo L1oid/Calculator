@@ -43,7 +43,7 @@ public class Auth implements Authorizable {
     }
 
     @Override
-    public String uploadAvatar(String login, String avatar) throws Exception {
+    public byte[] uploadAvatar(String login, byte[] avatar) throws Exception {
         return repository.uploadAvatar(login, avatar);
     }
 

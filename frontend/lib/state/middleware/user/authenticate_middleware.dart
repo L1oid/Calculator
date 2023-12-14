@@ -24,15 +24,15 @@ Middleware<AppState> authenticate() {
         final data = json.decode(response.body);
         final token = data['token'];
         final email = data['email'];
-        final avatar = base64Decode(data['avatar']);
+        final avatar = data['avatar'];
 
         store.dispatch(TokenSaveAction(token));
         store.dispatch(UsernameSaveAction(action.username));
         store.dispatch(EmailSaveAction(email));
-        if (avatar.isEmpty) {
+        if (avatar == null) {
           store.dispatch(AvatarSaveAction(null));
         } else {
-          store.dispatch(AvatarSaveAction(avatar));
+          store.dispatch(AvatarSaveAction(base64Decode(avatar)));
         }
       } else if (response.statusCode == 401) {
         final errorMessage = json.decode(response.body);

@@ -8,5 +8,5 @@ public interface UserRepositable {
     UserStatus addUser(String login, String password, String email) throws Exception;
     UserStatus changePassword(String login, String password, String newPassword) throws Exception;
     UserStatus deleteAccount(String login) throws Exception;
-    String uploadAvatar(String login, String avatar) throws Exception;
+    byte[] uploadAvatar(String login, byte[] avatar) throws Exception;
 }
