@@ -1,6 +1,6 @@
 import '/domain/api/calculator_interface.dart';
-import 'basic_calculator.dart';
-import 'slae_calculator.dart';
+import 'impl/basic_calculator.dart';
+import 'impl/slae_calculator.dart';
 
 class BasicCalculatorFactory {
   static BasicCalculatorInterface createCalculator() {

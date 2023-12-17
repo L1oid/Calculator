@@ -5,7 +5,7 @@ import '/state/actions/calculator_actions.dart';
 import '/view/widgets/drawer.dart';
 
 class BasicCalculatorScreen extends StatelessWidget {
-  const BasicCalculatorScreen({Key? key}) : super(key: key);
+  const BasicCalculatorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class BasicCalculatorScreen extends StatelessWidget {
           ),
           drawer: const AppDrawer(),
           body: Column(
-            children: <Widget>[
+            children: [
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
@@ -29,11 +29,10 @@ class BasicCalculatorScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const Divider(),
               Column(
-                children: <Widget>[
+                children: [
                   Row(
-                    children: <Widget>[
+                    children: [
                       buildButton('1', context),
                       buildButton('2', context),
                       buildButton('3', context),
@@ -41,7 +40,7 @@ class BasicCalculatorScreen extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: <Widget>[
+                    children: [
                       buildButton('4', context),
                       buildButton('5', context),
                       buildButton('6', context),
@@ -49,7 +48,7 @@ class BasicCalculatorScreen extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: <Widget>[
+                    children: [
                       buildButton('7', context),
                       buildButton('8', context),
                       buildButton('9', context),
@@ -57,7 +56,7 @@ class BasicCalculatorScreen extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: <Widget>[
+                    children: [
                       buildButton('0', context),
                       buildButton('(', context),
                       buildButton(')', context),
@@ -65,7 +64,7 @@ class BasicCalculatorScreen extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: <Widget>[
+                    children: [
                       buildButton('.', context),
                       buildButton('<-', context),
                       buildButton('C', context),

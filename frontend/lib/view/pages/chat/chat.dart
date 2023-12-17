@@ -12,7 +12,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  final TextEditingController messageController = TextEditingController();
   late Store<AppState> store;
 
   @override
@@ -24,15 +23,12 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void sendMessage(String text) {
-    store.dispatch(SendMessageAction(text));
-  }
-
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, List<Map<String, String>>>(
         converter: (store) => store.state.messages,
         builder: (context, messages) {
+          final TextEditingController messageController = TextEditingController();
           return Scaffold(
             appBar: AppBar(
               title: const Text('Чат'),
